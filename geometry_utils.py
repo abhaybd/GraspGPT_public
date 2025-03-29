@@ -104,8 +104,6 @@ def cluster_grasps(grasps, num_clusters=32):
 
         output_grasps.append(grasps[indexes, :, :])
 
-    output_grasps = np.asarray(output_grasps)
-
     return output_grasps
 
 
@@ -126,7 +124,7 @@ def sample_grasp_indexes(n, grasps):
     grasp_rows = [nonzero_rows[i] for i in grasp_rows]
     grasp_cols = []
     for grasp_row in grasp_rows:
-        if len(grasps[grasp_rows]) == 0:
+        if len(grasps[grasp_row]) == 0:
             raise ValueError('grasps cannot be empty')
 
         grasp_cols.append(np.random.randint(len(grasps[grasp_row])))
