@@ -1,0 +1,13 @@
+torch
+torchvision
+transformers
+pytorch-lightning
+pointnet2-ops @ git+https://github.com/erikwijmans/Pointnet2_PyTorch.git@b5ceb6d9ca0467ea34beb81023f96ee82228f626#egg=pointnet2_ops&subdirectory=pointnet2_ops_lib
+h5py
+tqdm
+open3d
+trimesh
+msgpack
+msgpack-numpy
+yacs
+openai
