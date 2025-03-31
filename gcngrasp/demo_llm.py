@@ -4,7 +4,7 @@ import tqdm
 import time
 import random
 import sys
-import openai
+from openai import OpenAI
 import torch
 import numpy as np
 import torch.nn.functional as F
@@ -13,30 +13,27 @@ from transformers import BertTokenizer, BertModel, logging
 from data.SGNLoader import pc_normalize
 from config import get_cfg_defaults
 from geometry_utils import farthest_grasps, regularize_pc_point_count
-from visualize import draw_scene, get_gripper_control_points
+from visualize import save_scene, get_gripper_control_points
 logging.set_verbosity_error()
 
 DEVICE = "cuda"
 CODE_DIR = os.path.join(os.path.dirname(__file__), '../')
 sys.path.append(CODE_DIR)
 from data_specification import TASKS, OPENAI_API_KEY, OBJ_PROMPTS, TASK_PROMPTS
-openai.api_key = OPENAI_API_KEY
+
+openai_client = OpenAI()
 
 def gpt(text):
     """
     OpenAI GPT API
     """
-    response = openai.Completion.create(
-    engine="text-davinci-003",
-    prompt=text,
-    temperature=1.0,
-    max_tokens=256,
-    top_p=1.0,
-    frequency_penalty=0.0,
-    presence_penalty=0.0
+    response = openai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": text}],
+        max_tokens=256,
     )
 
-    return response['choices'][0]['text'].strip()
+    return response.choices[0].message.content.strip()
 
 def encode_text(text, tokenizer, model, device, type=None):
     """
@@ -74,7 +71,6 @@ def gen_gpt_desc(class_label, task_label):
         temp_ans = gpt(prompt)
         print(f"[{c_key}] "+temp_ans)
         class_desc.append(temp_ans)
-        time.sleep(20)
     class_desc = ' '.join(item for item in class_desc)
     
     print("\nGenerating task description ......\n")
@@ -85,7 +81,6 @@ def gen_gpt_desc(class_label, task_label):
         temp_ans = gpt(prompt)
         print(f"[{t_key}] "+temp_ans)
         task_desc.append(temp_ans)
-        time.sleep(20)
     task_desc = ' '.join(item for item in task_desc)
 
     return class_desc, task_desc
@@ -141,10 +136,10 @@ def load_pc_and_grasps(data_dir, obj_name):
     grasps[:, :3, 3] -= pc_mean
 
     # number of candidate grasps
-    # grasps = farthest_grasps(
-    #     grasps, num_clusters=32, num_grasps=min(50, grasps.shape[0]))
     grasps = farthest_grasps(
-        grasps, num_clusters=32, num_grasps=min(1, grasps.shape[0]))
+        grasps, num_clusters=32, num_grasps=min(50, grasps.shape[0]))
+    # grasps = farthest_grasps(
+    #     grasps, num_clusters=32, num_grasps=min(1, grasps.shape[0]))
 
     grasp_idx = 0
 
@@ -171,10 +166,13 @@ def main(args, cfg):
 
     # load point cloud and grasps
     pc, grasps = load_pc_and_grasps(data_dir, obj_name)
+    print(f"Loaded {len(grasps)} grasps")
+    pc_original = pc.copy()
     pc_input = regularize_pc_point_count(
         pc, cfg.num_points, use_farthest_point=False)
 
     pc_mean = pc_input[:, :3].mean(axis=0)
+    pc_original[:, :3] -= pc_mean  # mean substraction
     pc_input[:, :3] -= pc_mean  # mean substraction
     grasps[:, :3, 3] -= pc_mean  # mean substraction
 
@@ -182,6 +180,14 @@ def main(args, cfg):
     probs = []
 
     all_grasps_start_time = time.time()
+
+    # language descriptions
+    obj_desc_txt, task_desc_txt = gen_gpt_desc(obj_class, task)
+    obj_desc, _, obj_desc_mask = encode_text(obj_desc_txt, tokenizer, bert_model, DEVICE, type='od')
+    task_desc, _, task_desc_mask = encode_text(task_desc_txt, tokenizer, bert_model, DEVICE, type='td')
+    # language instruciton
+    task_ins_txt = input('\nPlease input a natural language instruction (e.g., grasp the knife to cut): ')
+    task_ins, _, task_ins_mask = encode_text(task_ins_txt, tokenizer, bert_model, DEVICE, type='li')
 
     # eval each grasp in a loop
     for i in tqdm.trange(len(grasps)):
@@ -206,14 +212,6 @@ def main(args, cfg):
         # load language embeddings
         pc = torch.tensor([pc])
 
-        # language descriptions
-        obj_desc_txt, task_desc_txt = gen_gpt_desc(obj_class, task)
-        obj_desc, _, obj_desc_mask = encode_text(obj_desc_txt, tokenizer, bert_model, DEVICE, type='od')
-        task_desc, _, task_desc_mask = encode_text(task_desc_txt, tokenizer, bert_model, DEVICE, type='td')
-        # language instruciton
-        task_ins_txt = input('\nPlease input a natural language instruction (e.g., grasp the knife to cut): ')
-        task_ins, _, task_ins_mask = encode_text(task_ins_txt, tokenizer, bert_model, DEVICE, type='li')
-
         prob, pred = test(model, pc, obj_desc, obj_desc_mask, task_desc, task_desc_mask, task_ins, task_ins_mask)
 
         preds.append(pred.tolist())
@@ -229,16 +227,18 @@ def main(args, cfg):
     preds = np.array(preds)
     probs = np.array(probs)
 
+    breakpoint()
+
     # colored with task compatibility score (green is higher)
     grasp_colors = np.stack([np.ones(probs.shape[0]) -
                              probs, probs, np.zeros(probs.shape[0])], axis=1)
     
     # pc and grasp visualization
-    draw_scene(
-        pc_input,
+    save_scene(
+        "llm_all_grasps.glb",
+        pc_original,
         grasps,
-        grasp_colors=list(grasp_colors),
-        max_grasps=len(grasps))
+        grasp_colors=list(grasp_colors))
 
 
 if __name__ == '__main__':

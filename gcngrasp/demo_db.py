@@ -12,7 +12,7 @@ from transformers import BertTokenizer, BertModel, logging
 from data.SGNLoader import pc_normalize
 from config import get_cfg_defaults
 from geometry_utils import farthest_grasps, regularize_pc_point_count
-from visualize import draw_scene, get_gripper_control_points
+from visualize import save_scene, get_gripper_control_points
 logging.set_verbosity_error()
 
 DEVICE = "cuda"
@@ -124,10 +124,12 @@ def main(args, cfg):
     bert_model.eval()
     
     pc, grasps = load_pc_and_grasps(os.path.join(data_dir, 'pcs'), obj_name)
+    pc_original = pc.copy()
     pc_input = regularize_pc_point_count(
         pc, cfg.num_points, use_farthest_point=False)
 
     pc_mean = pc_input[:, :3].mean(axis=0)
+    pc_original[:, :3] -= pc_mean  # mean substraction
     pc_input[:, :3] -= pc_mean  # mean substraction
     grasps[:, :3, 3] -= pc_mean  # mean substraction
 
@@ -138,6 +140,7 @@ def main(args, cfg):
 
     # natural language instruction
     task_ins_txt = input('\nPlease input a natural language instruction (e.g., grasp the knife to cut): ')
+    # task_ins_txt = f"grasp the {obj_name} to {task}"
     task_ins, _, task_ins_mask = encode_text(task_ins_txt, tokenizer, bert_model, DEVICE, type='li')
 
     # eval each grasp in a loop
@@ -195,7 +198,7 @@ def main(args, cfg):
     preds = np.array(preds)
     probs = np.array(probs)
 
-    K = 5
+    K = len(probs)
     topk_inds = probs.argsort()[-K:][::-1]
     preds = preds[topk_inds]
     probs = probs[topk_inds]
@@ -203,15 +206,17 @@ def main(args, cfg):
 
     grasp_colors = np.stack([np.ones(probs.shape[0]) -
                              probs, probs, np.zeros(probs.shape[0])], axis=1)
-    
-    draw_scene(
-        pc_input,
+    save_scene(
+        "all_grasps.glb",
+        pc_original,
         grasps,
-        grasp_colors=list(grasp_colors),
-        max_grasps=len(grasps))
+        grasp_colors=list(grasp_colors))
 
     best_grasp = copy.deepcopy(grasps[np.argmax(probs)])
-    draw_scene(pc_input, np.expand_dims(best_grasp, axis=0))
+    save_scene(
+        "best_grasp.glb",
+        pc_original,
+        np.expand_dims(best_grasp, axis=0))
 
 
 if __name__ == '__main__':

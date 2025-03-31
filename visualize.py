@@ -133,6 +133,28 @@ def downsample_pc(pc, nsample):
         pc.shape[0], nsample, replace=pc.shape[1] > nsample)
     return pc[chosen_one, :], chosen_one
 
+def save_scene(
+    save_path,
+    pc,
+    grasps=None,
+    grasp_colors=None,
+):
+    scene = trimesh.Scene()
+    pcd = trimesh.PointCloud(pc[:, :3], colors=pc[:, 3:].astype(np.uint8))
+    scene.add_geometry(pcd)
+
+    if grasps is not None:
+        if grasp_colors is None:
+            grasp_colors = np.tile([255, 255, 0], (len(grasps), 1))
+        assert len(grasps) == len(grasp_colors)
+        for grasp, color in zip(grasps, grasp_colors):
+            for item in get_gripper_control_points_o3d(
+                    grasp, show_sweep_volume=False, color=color.astype(float)/255):
+                n_vertices = len(np.asarray(item.vertices))
+                v_colors = np.tile(color, (n_vertices, 1))
+                item_trimesh = trimesh.Trimesh(vertices=np.asarray(item.vertices), faces=np.asarray(item.triangles), vertex_colors=v_colors)
+                scene.add_geometry(item_trimesh)
+    scene.export(save_path)
 
 def draw_scene(
         pc=None,
