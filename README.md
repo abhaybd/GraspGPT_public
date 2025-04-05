@@ -52,6 +52,9 @@ pip install -r requirements.txt
 
 ## Dataset
 The Language Augmented TaskGrasp (LA-TaskGrasp) dataset is developed based on [TaskGrasp](https://arxiv.org/abs/2011.06431) dataset. To perform training and evaluation on the LA-TaskGrasp dataset, download the dataset [here](https://gatech.box.com/s/ddvp9co4jv462gchp38m31kb0umkt03p) and place it in the root folder as `data`:
+
+_Tip: To download using the command line, replace the `/s` part of the link with `/shared/static` and then use curl. For example: `curl -L  https://gatech.app.box.com/shared/static/ddvp9co4jv462gchp38m31kb0umkt03p --output data.zip`_ 
+
 ```shell
 unzip ~/Downloads/data.zip -d ./
 rm ~/Downloads/data.zip
