@@ -14,6 +14,7 @@ from data.SGNLoader import pc_normalize
 from config import get_cfg_defaults
 from geometry_utils import farthest_grasps, regularize_pc_point_count
 from visualize import save_scene, get_gripper_control_points
+import pdb
 logging.set_verbosity_error()
 
 DEVICE = "cuda"
@@ -23,7 +24,7 @@ from data_specification import TASKS, OPENAI_API_KEY, OBJ_PROMPTS, TASK_PROMPTS
 
 from utils.data_utils import TaskGraspDataset
 
-openai_client = OpenAI()
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 def gpt(text):
     """
@@ -107,6 +108,11 @@ def test(model, pc, obj_desc, obj_desc_mask, task_desc, task_desc_mask, task_ins
 
     pc = pc.type(torch.cuda.FloatTensor)
 
+    obj_desc = torch.from_numpy(obj_desc).unsqueeze(0).to(DEVICE)
+    obj_desc_mask = torch.from_numpy(obj_desc_mask).unsqueeze(0).to(DEVICE)
+    task_desc = torch.from_numpy(task_desc).unsqueeze(0).to(DEVICE)
+    task_desc_mask = torch.from_numpy(task_desc_mask).unsqueeze(0).to(DEVICE)
+
     with torch.no_grad():
         logits = model(pc, obj_desc, obj_desc_mask, task_desc, task_desc_mask, task_ins, task_ins_mask)
     logits = logits.squeeze()
@@ -116,7 +122,7 @@ def test(model, pc, obj_desc, obj_desc_mask, task_desc, task_desc_mask, task_ins
     return probs, preds
 
 def load_pc_and_grasps(data_dir, obj_name, view_idx: int):
-    obj_dir = os.path.join(data_dir, obj_name)
+    obj_dir = os.path.join(data_dir, "scans", obj_name)
 
     pc_file = os.path.join(obj_dir, f"{view_idx}_segmented_pc.npy")
     grasps_file = os.path.join(obj_dir, f"{view_idx}_registered_grasps.npy")
@@ -139,20 +145,30 @@ def run_eval(
     bert_tokenizer: BertTokenizer,
     bert_model: BertModel
 ):
-    pc, grasps = load_pc_and_grasps(data_dir, obj_id, view_idx)
+    try:
+        pc, grasps = load_pc_and_grasps(data_dir, obj_id, view_idx)
+    except:
+        print(f"no point cloud and grasp")
+        return None
     pc_input = regularize_pc_point_count(
         pc, cfg.num_points, use_farthest_point=False)
 
     object_name = obj_id.split("_", 1)[1].replace("_", " ")
     task_text = f"grasp the {object_name} to {task_verb}"
 
+    object_class = obj_id.split("_", 1)[1]
+    
+    obj_desc_dir = os.path.join(data_dir, "obj_gpt_v2", object_class)
+    task_desc_dir = os.path.join(data_dir, "task_gpt_v2", task_verb)
+
+
     preds = []
     probs = []
 
     # language descriptions
-    obj_desc_txt, task_desc_txt = gen_gpt_desc(object_name, task_verb)
-    obj_desc, _, obj_desc_mask = encode_text(obj_desc_txt, bert_tokenizer, bert_model, DEVICE, type='od')
-    task_desc, _, task_desc_mask = encode_text(task_desc_txt, bert_tokenizer, bert_model, DEVICE, type='td')
+    #obj_desc_txt, task_desc_txt = gen_gpt_desc(object_name, task_verb)
+    #obj_desc, _, obj_desc_mask = encode_text(obj_desc_txt, bert_tokenizer, bert_model, DEVICE, type='od')
+    #task_desc, _, task_desc_mask = encode_text(task_desc_txt, bert_tokenizer, bert_model, DEVICE, type='td')
     # language instruciton
     task_ins, _, task_ins_mask = encode_text(task_text, bert_tokenizer, bert_model, DEVICE, type='li')
 
@@ -176,6 +192,25 @@ def run_eval(
 
         # load language embeddings
         pc = torch.tensor([pc])
+
+        # object class description embeddings
+        obj_desc_path =  os.path.join(obj_desc_dir, 'descriptions', str(np.random.randint(0, 10)))
+        if not os.path.exists(obj_desc_path):
+            print(f"no description found for {object_name}")
+            return None
+            # raise ValueError(f"No such object description path: {obj_desc_path}")
+        obj_desc_txt = open(os.path.join(obj_desc_path, 'all.txt')).readlines()[0]
+        obj_desc = np.load(os.path.join(obj_desc_path, 'word_embed.npy'))[0]
+        obj_desc_mask = np.load(os.path.join(obj_desc_path, 'attn_mask.npy'))[0]
+        # task description embeddings 
+        task_desc_path = os.path.join(task_desc_dir, 'descriptions', str(np.random.randint(0, 10)))
+        if not os.path.exists(task_desc_path):
+            print(f"no description found for {task_verb}")
+            return None
+            # raise ValueError(f"No such task description dir: {task_desc_path}")
+        task_desc_txt = open(os.path.join(task_desc_path, 'all.txt')).readlines()[0]
+        task_desc = np.load(os.path.join(task_desc_path, 'word_embed.npy'))[0]
+        task_desc_mask = np.load(os.path.join(task_desc_path, 'attn_mask.npy'))[0]
 
         prob, pred = test(model, pc, obj_desc, obj_desc_mask, task_desc, task_desc_mask, task_ins, task_ins_mask)
 
@@ -204,6 +239,7 @@ def run_eval(
 def main(args, cfg):
     data_dir = args.data_dir
 
+
     # load GraspGPT
     model = load_model(cfg)
 
@@ -219,7 +255,8 @@ def main(args, cfg):
         for view_idx in tg_dataset.get_object_views(object_id):
             for task_verb in tg_dataset.get_object_tasks(object_id):
                 results = run_eval(tg_dataset, data_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model)
-                top_1_results.append(results["top-1"])
+                if results is not None:
+                    top_1_results.append(results["top-1"])
     print(f"Top-1 Accuracy: {np.mean(top_1_results):.2%}")
 
 if __name__ == '__main__':

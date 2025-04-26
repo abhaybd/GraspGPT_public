@@ -42,7 +42,6 @@ class GCNTaskGrasp(data.Dataset):
             sampling_radius=2,
             instance_agnostic_mode=1):
         """
-
         Args:
             num_points: Number of points in point cloud (used to downsample data to a fixed number)
             transforms: Used for data augmentation during training
