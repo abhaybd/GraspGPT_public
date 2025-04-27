@@ -92,6 +92,14 @@ def load_pc_and_grasps(data_dir, obj_name, view_idx: int):
     pc = np.load(pc_file)
     grasps = np.load(grasps_file)
 
+    grasp_trf = np.array([
+        [0, -1, 0, 0],
+        [0, 0, -1, 0],
+        [1, 0, 0, 0.09],
+        [0, 0, 0, 1]
+    ])
+    grasps = grasps @ grasp_trf[None]
+
     return pc, grasps
 
 def run_eval(
