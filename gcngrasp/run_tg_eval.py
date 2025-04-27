@@ -1,10 +1,11 @@
+from collections import defaultdict
 import argparse
 import os
 import tqdm
+import json
 import time
 import random
 import sys
-from openai import OpenAI
 import torch
 import numpy as np
 import torch.nn.functional as F
@@ -14,29 +15,17 @@ from data.SGNLoader import pc_normalize
 from config import get_cfg_defaults
 from geometry_utils import farthest_grasps, regularize_pc_point_count
 from visualize import save_scene, get_gripper_control_points
+from sklearn.metrics import average_precision_score
 import pdb
 logging.set_verbosity_error()
+
 
 DEVICE = "cuda"
 CODE_DIR = os.path.join(os.path.dirname(__file__), '../')
 sys.path.append(CODE_DIR)
-from data_specification import TASKS, OPENAI_API_KEY, OBJ_PROMPTS, TASK_PROMPTS
 
 from utils.data_utils import TaskGraspDataset
 
-openai_client = OpenAI(api_key=OPENAI_API_KEY)
-
-def gpt(text):
-    """
-    OpenAI GPT API
-    """
-    response = openai_client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": text}],
-        max_tokens=256,
-    )
-
-    return response.choices[0].message.content.strip()
 
 def encode_text(text, tokenizer, model, device, type=None):
     """
@@ -57,36 +46,6 @@ def encode_text(text, tokenizer, model, device, type=None):
         sentence_embedding = torch.mean(output[0], dim=1)
     
     return word_embedding, sentence_embedding, encoded_input['attention_mask']
-
-def gen_gpt_desc(class_label, task_label):
-    """
-    Generate object class and task descriptions
-    """        
-    class_keys = [random.choice(['shape', 'geometry']), random.choice(["use", "func"]), 
-    random.choice(["sim_shape", "sim_geo"]), random.choice(["sim_use", "sim_func"])]
-    task_keys = [random.choice(['func', 'use']), "sim_effect", random.choice(['sem_verb', 'sim_verb'])]
-
-    print("\nGenerating object class description ......\n")
-    class_desc = []
-    for c_key in class_keys:
-        prompt = OBJ_PROMPTS[c_key]
-        prompt = prompt.replace('OBJ_CLASS', class_label)
-        temp_ans = gpt(prompt)
-        print(f"[{c_key}] "+temp_ans)
-        class_desc.append(temp_ans)
-    class_desc = ' '.join(item for item in class_desc)
-    
-    print("\nGenerating task description ......\n")
-    task_desc = []
-    for t_key in task_keys:
-        prompt = TASK_PROMPTS[t_key]
-        prompt = prompt.replace('TASK_CLASS', task_label)
-        temp_ans = gpt(prompt)
-        print(f"[{t_key}] "+temp_ans)
-        task_desc.append(temp_ans)
-    task_desc = ' '.join(item for item in task_desc)
-
-    return class_desc, task_desc
 
 def load_model(cfg):
     """
@@ -143,7 +102,9 @@ def run_eval(
     task_verb: str,
     model: GraspGPT_plain,
     bert_tokenizer: BertTokenizer,
-    bert_model: BertModel
+    bert_model: BertModel,
+    train_obj_grasp_tasks: dict, 
+    task_text: str = None,
 ):
     try:
         pc, grasps = load_pc_and_grasps(data_dir, obj_id, view_idx)
@@ -154,7 +115,9 @@ def run_eval(
         pc, cfg.num_points, use_farthest_point=False)
 
     object_name = obj_id.split("_", 1)[1].replace("_", " ")
-    task_text = f"grasp the {object_name} to {task_verb}"
+
+    if task_text is None:
+        task_text = f"grasp the {object_name} to {task_verb}"
 
     object_class = obj_id.split("_", 1)[1]
     
@@ -165,15 +128,21 @@ def run_eval(
     preds = []
     probs = []
 
-    # language descriptions
-    #obj_desc_txt, task_desc_txt = gen_gpt_desc(object_name, task_verb)
-    #obj_desc, _, obj_desc_mask = encode_text(obj_desc_txt, bert_tokenizer, bert_model, DEVICE, type='od')
-    #task_desc, _, task_desc_mask = encode_text(task_desc_txt, bert_tokenizer, bert_model, DEVICE, type='td')
     # language instruciton
     task_ins, _, task_ins_mask = encode_text(task_text, bert_tokenizer, bert_model, DEVICE, type='li')
 
+    skip_count = 0
     # eval each grasp in a loop
     for i in tqdm.trange(len(grasps)):
+
+        # unique indicator
+        unique_id = f"{obj_id}-{i}-{task_verb}"
+
+        if unique_id in train_obj_grasp_tasks:
+            # skip if the grasp is in the training set
+            skip_count +=1
+            continue
+
         grasp = grasps[i]
 
         pc = pc_input[:, :3]
@@ -202,6 +171,7 @@ def run_eval(
         obj_desc_txt = open(os.path.join(obj_desc_path, 'all.txt')).readlines()[0]
         obj_desc = np.load(os.path.join(obj_desc_path, 'word_embed.npy'))[0]
         obj_desc_mask = np.load(os.path.join(obj_desc_path, 'attn_mask.npy'))[0]
+        
         # task description embeddings 
         task_desc_path = os.path.join(task_desc_dir, 'descriptions', str(np.random.randint(0, 10)))
         if not os.path.exists(task_desc_path):
@@ -217,6 +187,11 @@ def run_eval(
         preds.append(pred.tolist())
         probs.append(prob.tolist())
 
+    
+    if len(preds) == 0:
+        return None
+    
+    print(f"Skipped {skip_count} grasps in {obj_id} {view_idx} {task_verb} since in train")
     preds = np.array(preds).flatten().astype(bool)
     probs = np.array(probs).flatten()
 
@@ -224,21 +199,54 @@ def run_eval(
     gt = dataset.get_grasp_labels(obj_id, task_verb)
 
     masked_preds = preds[label_mask]
+    masked_probs = probs[label_mask]
+
     tp = np.sum(masked_preds & gt)
     fp = np.sum(masked_preds & ~gt)
     tn = np.sum(~masked_preds & ~gt)
     fn = np.sum(~masked_preds & gt)
+
+    avg_prec = average_precision_score(gt, masked_probs)
+
+    idx=np.argmax(probs[label_mask])
+
     return {
         "accuracy": (tp + tn) / (tp + tn + fp + fn),
         "precision": tp / (tp + fp),
         "recall": tp / (tp + fn),
         "f1": 2 * tp / (2 * tp + fp + fn),
-        "top-1": preds[np.argmax(probs[label_mask])]
+        "top-1": gt[idx],
+        "avg_prec": avg_prec,
     }
 
 def main(args, cfg):
     data_dir = args.data_dir
 
+    # load train ids
+    target_folder = "/net/nfs2.prior/arijitr/research/semantic_grasping/GraspGPT_public/data/taskgrasp/splits_final/"
+    split_idx = cfg.split_idx
+    split_mode = cfg.split_mode
+    train_obj_grasp_tasks = {}
+    
+    train_split_file = os.path.join(target_folder, split_mode, str(split_idx), "train_split.txt")
+
+    # open the file and read the lines
+    with open(train_split_file, 'r') as f:
+        lines = f.readlines()
+        # remove the newline characters
+        lines = [line.strip() for line in lines]
+    
+    # each line is formatted as <object_id>-<grasp_id>-<task_verb>:<label>. Get the object_id, grasp_id, and task_verb
+    # format as dictionary and append to train_obj_grasp_tasks
+    for line in lines:
+        obj_grasp_task = line.split(":")
+        train_obj_grasp_tasks[obj_grasp_task[0]] = obj_grasp_task[1]
+
+    print(f"Total number of training samples: {len(train_obj_grasp_tasks)}")
+
+    # load task levels
+    if args.use_levels:
+        task_levels = json.load(open("/net/nfs2.prior/arijitr/research/semantic_grasping/GraspGPT_public/gcngrasp/data/reworded_tasks.json"))
 
     # load GraspGPT
     model = load_model(cfg)
@@ -251,25 +259,69 @@ def main(args, cfg):
 
     tg_dataset = TaskGraspDataset(data_dir)
     top_1_results = []
+    mean_avg_prec = []
+    top_1_results_level = defaultdict(list)
+    all_results = [] # put results of level, task description, correct pred or not. 
     for object_id in tg_dataset.get_objects():
-        for view_idx in tg_dataset.get_object_views(object_id):
-            for task_verb in tg_dataset.get_object_tasks(object_id):
-                results = run_eval(tg_dataset, data_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model)
-                if results is not None:
-                    top_1_results.append(results["top-1"])
-    print(f"Top-1 Accuracy: {np.mean(top_1_results):.2%}")
+        for task_verb in tg_dataset.get_object_tasks(object_id):
+            for view_idx in tg_dataset.get_object_views(object_id):
+                if args.use_levels:
+                    object_name = object_id.split("_", 1)[1].replace("_", " ")
+                    level_dict_key = f"{object_name}-{task_verb}"
+                    if level_dict_key not in task_levels:
+                        print(f"no task levels for {level_dict_key}")
+                        continue
+                    for level in task_levels[level_dict_key]:
+                        task_text = task_levels[level_dict_key][level]
+                        results = run_eval(tg_dataset, data_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model, train_obj_grasp_tasks, task_text)
+                        if results is not None:
+                            top_1_results_level[level].append(results["top-1"])
+                            all_results.append((level, task_text, results["top-1"]))
+                else:
+                    results = run_eval(tg_dataset, data_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model, train_obj_grasp_tasks)
+                    if results is not None:
+                        top_1_results.append(results["top-1"])
+                        mean_avg_prec.append(results["avg_prec"])
+                    
+    if args.use_levels:
+        # save all_results in csv for viewing
+        with open(os.path.join("gcngrasp", "results", f"{run_name}_levels_qual.csv"), "w") as f:
+            f.write("level,task_desc,correct_pred\n")
+            for level, task_desc, correct_pred in all_results:
+                f.write(f"{level},{task_desc},{correct_pred}\n")
+        print("----------------------------------------------------------------")
+        for level, results in top_1_results_level.items():
+            print(f"Level {level}: Top-1 Accuracy: {np.mean(results):.2%}")
+        print("----------------------------------------------------------------")
+        #save to csv
+        run_name = args.cfg_file.split("/")[-1].split(".")[0]
+        log_entry_name = f"{cfg.split_mode}_{cfg.split_idx}"
+        with open(os.path.join("gcngrasp", "results", f"{run_name}_top_1_results_levels.csv"), "w") as f:
+            for level, results in top_1_results_level.items():
+                f.write(f"{log_entry_name},{level},{np.mean(results):.2%}\n")
+    else:
+        print("----------------------------------------------------------------")
+        print(f"Top-1 Accuracy: {np.mean(top_1_results):.2%}")
+        print(f"Mean Average Precision: {np.mean(mean_avg_prec):.2%}")
+        print("----------------------------------------------------------------")
+
+        #save to csv
+        run_name = args.cfg_file.split("/")[-1].split(".")[0]
+        log_entry_name = f"{cfg.split_mode}_{cfg.split_idx}"
+        with open(os.path.join("gcngrasp", "results", f"{run_name}_top_1_results.csv"), "w") as f:
+            f.write(f"{log_entry_name},{np.mean(top_1_results):.2%},{np.mean(mean_avg_prec):.2%}\n")
+    
 
 if __name__ == '__main__':
     """
-    python gcngrasp/demo.py cfg/eval/gcngrasp/gcngrasp_split_mode_t_split_idx_3_.yml --obj_name pan --obj_class saucepan --task pour
-    python gcngrasp/demo.py cfg/eval/gcngrasp/gcngrasp_split_mode_t_split_idx_3_.yml --obj_name spatula --obj_class spatula --task scoop
-    python gcngrasp/demo.py cfg/eval/gcngrasp/gcngrasp_split_mode_t_split_idx_3_.yml --obj_name mug --obj_class mug --task drink
+    python gcngrasp/run_tg_eval_ver_ar.py --data_dir data/retargeted_taskgrasp
     """
     parser = argparse.ArgumentParser(description="visualize data and stuff")
     parser.add_argument('--task', help='', default='scoop')
     parser.add_argument('--obj_class', help='', default='spatula')
     parser.add_argument('--data_dir', help='location of sample data', default='')
     parser.add_argument('--obj_name', help='', default='spatula')
+    parser.add_argument('--use_levels', help='', default=False)
     parser.add_argument(
         '--cfg_file',
         help='yaml file in YACS config format to override default configs',
