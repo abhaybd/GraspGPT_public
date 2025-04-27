@@ -292,6 +292,7 @@ def main(args, cfg):
                         mean_avg_prec.append(results["avg_prec"])
                     
     if args.use_levels:
+        run_name = args.cfg_file.split("/")[-1].split(".")[0]
         # save all_results in csv for viewing
         with open(os.path.join("gcngrasp", "results", f"{run_name}_levels_qual.csv"), "w") as f:
             f.write("level,task_desc,correct_pred\n")
@@ -302,7 +303,7 @@ def main(args, cfg):
             print(f"Level {level}: Top-1 Accuracy: {np.mean(results):.2%}")
         print("----------------------------------------------------------------")
         #save to csv
-        run_name = args.cfg_file.split("/")[-1].split(".")[0]
+
         log_entry_name = f"{cfg.split_mode}_{cfg.split_idx}"
         with open(os.path.join("gcngrasp", "results", f"{run_name}_top_1_results_levels.csv"), "w") as f:
             for level, results in top_1_results_level.items():
