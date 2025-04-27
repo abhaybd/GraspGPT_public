@@ -231,7 +231,7 @@ def main(args, cfg):
     data_dir = args.data_dir
 
     # load train ids
-    target_folder = "/net/nfs2.prior/arijitr/research/semantic_grasping/GraspGPT_public/data/taskgrasp/splits_final/"
+    target_folder = "data/taskgrasp/splits_final/"
     split_idx = cfg.split_idx
     split_mode = cfg.split_mode
     train_obj_grasp_tasks = {}
@@ -265,7 +265,7 @@ def main(args, cfg):
     bert_model = bert_model.to(DEVICE)
     bert_model.eval()
 
-    tg_dataset = TaskGraspDataset(data_dir)
+    tg_dataset = TaskGraspDataset("/weka/prior/abhayd/semantic-grasping-datasets/taskgrasp_image")
     top_1_results = []
     mean_avg_prec = []
     top_1_results_level = defaultdict(list)
@@ -328,9 +328,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="visualize data and stuff")
     parser.add_argument('--task', help='', default='scoop')
     parser.add_argument('--obj_class', help='', default='spatula')
-    parser.add_argument('--data_dir', help='location of sample data', default='')
+    parser.add_argument('--data_dir', help='location of sample data', default='data/taskgrasp')
     parser.add_argument('--obj_name', help='', default='spatula')
-    parser.add_argument('--use_levels', help='', default=False)
+    parser.add_argument('--use_levels', help='', action='store_true')
     parser.add_argument(
         '--cfg_file',
         help='yaml file in YACS config format to override default configs',
