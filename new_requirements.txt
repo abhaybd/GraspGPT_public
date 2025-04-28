@@ -12,3 +12,6 @@ msgpack-numpy
 yacs
 openai
 lmdb==1.4.0
+fastapi[standard]
+Pillow
+sam2 @ git+https://github.com/facebookresearch/sam2.git
