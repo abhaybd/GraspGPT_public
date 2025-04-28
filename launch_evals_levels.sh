@@ -14,7 +14,7 @@ gantry run -w ai2/abhayd -b ai2/prior \
     --cluster ai2/jupiter-cirrascale-2 \
     --cluster ai2/saturn-cirrascale \
     --cluster ai2/ceres-cirrascale \
-    --install "pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118 && pip install -r new_requirements.txt" \
+    --install "pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118 && pip install -r new_requirements.txt && pip install git+https://github.com/facebookresearch/sam2.git" \
     --allow-dirty \
     -- \
     bash run_evals_levels_abhay.sh
