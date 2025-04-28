@@ -1,0 +1,1397 @@
+{
+  "cup-handover": {
+    "level_0": "Grasp the cup to handover",
+    "level_1": "Hand over the cup to someone",
+    "level_2": "Give the cup to the person"
+  },
+  "measuring cup-ladle": {
+    "level_0": "Grasp the measuring cup to ladle",
+    "level_1": "Pour the ingredients using a measuring cup",
+    "level_2": "Transfer the ingredients"
+  },
+  "frying pan-pound": {
+    "level_0": "Grasp the frying pan to pound",
+    "level_1": "Pound with a frying pan",
+    "level_2": "Flatten the object using the frying pan"
+  },
+  "dustpan-handover": {
+    "level_0": "Grasp the dustpan to handover",
+    "level_1": "Pick up the dustpan to pass it to someone",
+    "level_2": "Give the dustpan to someone"
+  },
+  "watering can-dispense": {
+    "level_0": "Grasp the watering can to dispense",
+    "level_1": "Water the plants using the watering can",
+    "level_2": "Water the plants"
+  },
+  "trowel-dig": {
+    "level_0": "Grasp the trowel to dig",
+    "level_1": "Start digging in the soil",
+    "level_2": "Dig a hole"
+  },
+  "measuring cup-scoop": {
+    "level_0": "Grasp the measuring cup to scoop",
+    "level_1": "Use the measuring cup to scoop",
+    "level_2": "Scoop the ingredients using a cup"
+  },
+  "pitcher-dispense": {
+    "level_0": "Grasp the pitcher to dispense",
+    "level_1": "Pour from the pitcher",
+    "level_2": "Serve the drink"
+  },
+  "slotted spoon-strain": {
+    "level_0": "Grasp the slotted spoon to strain",
+    "level_1": "Use a slotted spoon to drain liquid from food",
+    "level_2": "Strain the liquid"
+  },
+  "paint roller-handover": {
+    "level_0": "Grasp the paint roller to handover",
+    "level_1": "Hand over the paint roller to someone",
+    "level_2": "Pass the paint roller to the next person"
+  },
+  "squeezer-mash": {
+    "level_0": "Grasp the squeezer to mash",
+    "level_1": "Mash the fruit with the squeezer",
+    "level_2": "Squeeze the fruit"
+  },
+  "ice scraper-scrape": {
+    "level_0": "Grasp the ice scraper to scrape",
+    "level_1": "Scrape the ice off the windshield",
+    "level_2": "Clear the windshield"
+  },
+  "brush-handover": {
+    "level_0": "Grasp the brush to handover",
+    "level_1": "Give someone the brush",
+    "level_2": "Pass the brush to me"
+  },
+  "can opener-open": {
+    "level_0": "Grasp the can opener to open",
+    "level_1": "Open the can using a can opener",
+    "level_2": "Open the can"
+  },
+  "scissors-cut": {
+    "level_0": "Grasp the scissors to cut",
+    "level_1": "Cut the paper with the scissors",
+    "level_2": "Trim the paper"
+  },
+  "scissors-open": {
+    "level_0": "Grasp the scissors to open",
+    "level_1": "Use scissors to open a package",
+    "level_2": "Open the package"
+  },
+  "coat hanger-hang": {
+    "level_0": "Grasp the coat hanger to hang",
+    "level_1": "Hang up the coat",
+    "level_2": "Put the coat away"
+  },
+  "paint scraper-scrape": {
+    "level_0": "Grasp the paint scraper to scrape",
+    "level_1": "Scrape the surface using the paint scraper",
+    "level_2": "Remove paint from the surface"
+  },
+  "trowel-mix": {
+    "level_0": "Grasp the trowel to mix",
+    "level_1": "Use a trowel to mix soil or materials",
+    "level_2": "Blend the materials"
+  },
+  "whisk-stir": {
+    "level_0": "Grasp the whisk to stir",
+    "level_1": "Use the whisk to mix ingredients",
+    "level_2": "Blend the mixture"
+  },
+  "scrubber-scrape": {
+    "level_0": "Grasp the scrubber to scrape",
+    "level_1": "Use the scrubber to clean the surface",
+    "level_2": "Scrub and clean the area"
+  },
+  "paint roller-roll": {
+    "level_0": "Grasp the paint roller to roll",
+    "level_1": "Roll some paint onto the wall",
+    "level_2": "Paint the wall"
+  },
+  "squeezer-crush": {
+    "level_0": "Grasp the squeezer to crush",
+    "level_1": "Squeeze a piece of fruit",
+    "level_2": "Extract the juice"
+  },
+  "mortar-mix": {
+    "level_0": "Grasp the mortar to mix",
+    "level_1": "Mix the ingredients in the mortar",
+    "level_2": "Blend everything together"
+  },
+  "measuring cup-dispense": {
+    "level_0": "Grasp the measuring cup to dispense",
+    "level_1": "Use the measuring cup to pour",
+    "level_2": "Pour the contents"
+  },
+  "brush-clean": {
+    "level_0": "Grasp the brush to clean",
+    "level_1": "Clean the surface with a brush",
+    "level_2": "Clean the area"
+  },
+  "xacto knife-scratch": {
+    "level_0": "Grasp the xacto knife to scratch",
+    "level_1": "Use the xacto knife to scratch",
+    "level_2": "Make a scratch with a sharp tool"
+  },
+  "fork-scoop": {
+    "level_0": "Grasp the fork to scoop",
+    "level_1": "Scoop some food with the fork",
+    "level_2": "Serve the food"
+  },
+  "vase-pour": {
+    "level_0": "Grasp the vase to pour",
+    "level_1": "Pour the contents out of the vase",
+    "level_2": "Empty the vase"
+  },
+  "garlic press-crush": {
+    "level_0": "Grasp the garlic press to crush",
+    "level_1": "Use a garlic press to crush cloves",
+    "level_2": "Crush the garlic cloves"
+  },
+  "spoon-handover": {
+    "level_0": "Grasp the spoon to handover",
+    "level_1": "Give someone the spoon",
+    "level_2": "Pass the spoon"
+  },
+  "squeezer-flatten": {
+    "level_0": "Grasp the squeezer to flatten",
+    "level_1": "Flatten something using the squeezer",
+    "level_2": "Squash it flat"
+  },
+  "scissors-scrape": {
+    "level_0": "Grasp the scissors to scrape",
+    "level_1": "Use the scissors to scrape gently",
+    "level_2": "Gently scrape with the scissors"
+  },
+  "pan-saute": {
+    "level_0": "Grasp the pan to saute",
+    "level_1": "Saute the vegetables in the pan",
+    "level_2": "Cook the vegetables"
+  },
+  "tongs-pick up": {
+    "level_0": "Grasp the tongs to pick up",
+    "level_1": "Pick something up using tongs",
+    "level_2": "Use tongs to grab something"
+  },
+  "spatula-lift": {
+    "level_0": "Grasp the spatula to lift",
+    "level_1": "Use the spatula to lift a pancake",
+    "level_2": "Flip the pancake"
+  },
+  "tiller-till": {
+    "level_0": "Grasp the tiller to till",
+    "level_1": "Use the tiller to break up the soil",
+    "level_2": "Prepare the soil for planting"
+  },
+  "bowl-pick up": {
+    "level_0": "Grasp the bowl to pick up",
+    "level_1": "Pick up the bowl",
+    "level_2": "Lift the bowl"
+  },
+  "pasta fork-sift": {
+    "level_0": "Grasp the pasta fork to sift",
+    "level_1": "Use the pasta fork to sift",
+    "level_2": "Sift through the pasta"
+  },
+  "garlic press-flatten": {
+    "level_0": "Grasp the garlic press to flatten",
+    "level_1": "Use the garlic press to crush the garlic",
+    "level_2": "Crush the garlic"
+  },
+  "rolling pin-straighten": {
+    "level_0": "Grasp the rolling pin to straighten",
+    "level_1": "Use the rolling pin to flatten the dough",
+    "level_2": "Flatten the dough"
+  },
+  "scissors-slice": {
+    "level_0": "Grasp the scissors to slice",
+    "level_1": "Cut with the scissors",
+    "level_2": "Make a cut"
+  },
+  "salt shaker-shake": {
+    "level_0": "Grasp the salt shaker to shake",
+    "level_1": "Shake some salt onto the dish",
+    "level_2": "Season the dish"
+  },
+  "scooper-handover": {
+    "level_0": "Grasp the scooper to handover",
+    "level_1": "Pass the scooper to someone",
+    "level_2": "Hand over the scooper"
+  },
+  "mortar-grind": {
+    "level_0": "Grasp the mortar to grind",
+    "level_1": "Grind spices using the mortar",
+    "level_2": "Crush the spices"
+  },
+  "spoon-dispense": {
+    "level_0": "Grasp the spoon to dispense",
+    "level_1": "Use a spoon to serve the food",
+    "level_2": "Serve the food"
+  },
+  "screwdriver-poke": {
+    "level_0": "Grasp the screwdriver to poke",
+    "level_1": "Use the screwdriver to poke a target",
+    "level_2": "Poke with the screwdriver"
+  },
+  "ice scraper-dig": {
+    "level_0": "Grasp the ice scraper to dig",
+    "level_1": "Scrape ice off a surface",
+    "level_2": "Clear the ice away"
+  },
+  "meat tenderizer-tenderize": {
+    "level_0": "Grasp the meat tenderizer to tenderize",
+    "level_1": "Use the meat tenderizer to soften the meat",
+    "level_2": "Tenderize the meat"
+  },
+  "pan-pick up": {
+    "level_0": "Grasp the pan to pick up",
+    "level_1": "Pick up the pan",
+    "level_2": "Get the pan"
+  },
+  "spatula-stir": {
+    "level_0": "Grasp the spatula to stir",
+    "level_1": "Stir the ingredients in the pan",
+    "level_2": "Mix the contents"
+  },
+  "mug-mash": {
+    "level_0": "Grasp the mug to mash",
+    "level_1": "Use the mug to mash something",
+    "level_2": "Mash the ingredients"
+  },
+  "mixing bowl-dispense": {
+    "level_0": "Grasp the mixing bowl to dispense",
+    "level_1": "Dispense the contents from the mixing bowl",
+    "level_2": "Pour out the mixture"
+  },
+  "cup-scoop": {
+    "level_0": "Grasp the cup to scoop",
+    "level_1": "Scoop liquid with a cup",
+    "level_2": "Pour or transfer the liquid"
+  },
+  "frying pan-handover": {
+    "level_0": "Grasp the frying pan to handover",
+    "level_1": "Pass the frying pan to someone",
+    "level_2": "Give the pan to them"
+  },
+  "spatula-scrape": {
+    "level_0": "Grasp the spatula to scrape",
+    "level_1": "Use the spatula to clean off the surface",
+    "level_2": "Scrape off what's stuck on the surface"
+  },
+  "bowl-pour": {
+    "level_0": "Grasp the bowl to pour",
+    "level_1": "Hold the bowl to pour its contents",
+    "level_2": "Pour the contents from the bowl"
+  },
+  "litter scoop-scoop": {
+    "level_0": "Grasp the litter scoop to scoop",
+    "level_1": "Use the scoop to clean the litter box",
+    "level_2": "Clean the litter box"
+  },
+  "spatula-flip": {
+    "level_0": "Grasp the spatula to flip",
+    "level_1": "Use the spatula to flip the item",
+    "level_2": "Turn it over with the spatula"
+  },
+  "ice scraper-scratch": {
+    "level_0": "Grasp the ice scraper to scratch",
+    "level_1": "Scrape the ice off the windshield",
+    "level_2": "Clean the windshield"
+  },
+  "mortar-mash": {
+    "level_0": "Grasp the mortar to mash",
+    "level_1": "Mash with the mortar in the bowl",
+    "level_2": "Crush the ingredients"
+  },
+  "mortar-pound": {
+    "level_0": "Grasp the mortar to pound",
+    "level_1": "Use the mortar to crush and grind",
+    "level_2": "Prepare the ingredients"
+  },
+  "pitcher-pour": {
+    "level_0": "Grasp the pitcher to pour",
+    "level_1": "Pour from the pitcher",
+    "level_2": "Pour the liquid"
+  },
+  "mug-ladle": {
+    "level_0": "Grasp the mug to ladle",
+    "level_1": "Use the mug to scoop some liquid",
+    "level_2": "Scoop the liquid"
+  },
+  "fork-skewer": {
+    "level_0": "Grasp the fork to skewer",
+    "level_1": "Skewer the food with a fork",
+    "level_2": "Poke the food to pick it up"
+  },
+  "scissors-stab": {
+    "level_0": "Grasp the scissors to stab",
+    "level_1": "Use the scissors to pierce something",
+    "level_2": "Pierce the object"
+  },
+  "cookie cutter-cut": {
+    "level_0": "Grasp the cookie cutter to cut",
+    "level_1": "Use the cookie cutter to make shapes",
+    "level_2": "Cut out shapes with the cutter"
+  },
+  "masher-mash": {
+    "level_0": "Grasp the masher to mash",
+    "level_1": "Mash the potatoes",
+    "level_2": "Make the potatoes smooth"
+  },
+  "brush-scratch": {
+    "level_0": "Grasp the brush to scratch",
+    "level_1": "Use the brush to scratch a surface",
+    "level_2": "Scratch the surface"
+  },
+  "mixing bowl-mix": {
+    "level_0": "Grasp the mixing bowl to mix",
+    "level_1": "Mix the contents in the bowl",
+    "level_2": "Combine the ingredients"
+  },
+  "ladle-sift": {
+    "level_0": "Grasp the ladle to sift",
+    "level_1": "Use the ladle to sift through the mixture",
+    "level_2": "Sift the mixture"
+  },
+  "cookie cutter-slice": {
+    "level_0": "Grasp the cookie cutter to slice",
+    "level_1": "Use the cookie cutter to cut out shapes",
+    "level_2": "Cut out the dough shapes"
+  },
+  "salad tongs-scoop": {
+    "level_0": "Grasp the salad tongs to scoop",
+    "level_1": "Use the salad tongs to serve the salad",
+    "level_2": "Serve the salad"
+  },
+  "baster-dispense": {
+    "level_0": "Grasp the baster to dispense",
+    "level_1": "Use the baster to dispense liquid",
+    "level_2": "Dispense liquid from a container"
+  },
+  "trowel-scratch": {
+    "level_0": "Grasp the trowel to scratch",
+    "level_1": "Use the trowel to scratch the surface",
+    "level_2": "Scrape the surface with the tool"
+  },
+  "keg-dispense": {
+    "level_0": "Grasp the keg to dispense",
+    "level_1": "Pour a drink from the keg",
+    "level_2": "Serve a beverage"
+  },
+  "peeler-grate": {
+    "level_0": "Grasp the peeler to grate",
+    "level_1": "Use the peeler to grate something",
+    "level_2": "Grate the ingredient"
+  },
+  "brush-scrub": {
+    "level_0": "Grasp the brush to scrub",
+    "level_1": "Scrub the stained surface",
+    "level_2": "Clean the surface"
+  },
+  "spoon-dig": {
+    "level_0": "Grasp the spoon to dig",
+    "level_1": "Use the spoon to dig into the ground",
+    "level_2": "Dig a hole"
+  },
+  "spoon-pick up": {
+    "level_0": "Grasp the spoon to pick up",
+    "level_1": "Scoop something up",
+    "level_2": "Gather the food"
+  },
+  "lint roller-roll": {
+    "level_0": "Grasp the lint roller to roll",
+    "level_1": "Use the lint roller to clean the fabric",
+    "level_2": "Remove lint from the clothing"
+  },
+  "tongs-lift": {
+    "level_0": "Grasp the tongs to lift",
+    "level_1": "Use the tongs to lift something",
+    "level_2": "Pick it up with the tongs"
+  },
+  "dustpan-clean": {
+    "level_0": "Grasp the dustpan to clean",
+    "level_1": "Use the dustpan to tidy up",
+    "level_2": "Sweep up the mess"
+  },
+  "bottle-mix": {
+    "level_0": "Grasp the bottle to mix",
+    "level_1": "Shake the bottle to mix the contents",
+    "level_2": "Mix the contents"
+  },
+  "charger-turn on": {
+    "level_0": "Grasp the charger to turn on",
+    "level_1": "Plug in the charger to power up",
+    "level_2": "Connect and power it up"
+  },
+  "hair straightener-straighten": {
+    "level_0": "Grasp the hair straightener to straighten",
+    "level_1": "Straighten your hair",
+    "level_2": "Do your hair"
+  },
+  "ladle-drink": {
+    "level_0": "Grasp the ladle to drink",
+    "level_1": "Use the ladle to sip some soup",
+    "level_2": "Take a sip of the soup"
+  },
+  "xacto knife-slice": {
+    "level_0": "Grasp the xacto knife to slice",
+    "level_1": "Use the xacto knife to carefully slice",
+    "level_2": "Make precise cuts"
+  },
+  "frying pan-saute": {
+    "level_0": "Grasp the frying pan to saute",
+    "level_1": "Saute the vegetables in the frying pan",
+    "level_2": "Cook the vegetables"
+  },
+  "paint roller-brush": {
+    "level_0": "Grasp the paint roller to brush",
+    "level_1": "Use the paint roller to apply paint",
+    "level_2": "Paint the surface"
+  },
+  "rolling pin-mash": {
+    "level_0": "Grasp the rolling pin to mash",
+    "level_1": "Mash the dough with the rolling pin",
+    "level_2": "Flatten the dough"
+  },
+  "strainer-pick up": {
+    "level_0": "Grasp the strainer to pick up",
+    "level_1": "Use the strainer to scoop up items",
+    "level_2": "Scoop using the strainer"
+  },
+  "rolling pin-pound": {
+    "level_0": "Grasp the rolling pin to pound",
+    "level_1": "Pound the dough with the rolling pin",
+    "level_2": "Flatten the dough"
+  },
+  "squeege-squeegee": {
+    "level_0": "Grasp the squeege to squeegee",
+    "level_1": "Clean the surface using a squeegee",
+    "level_2": "Wipe the surface clean"
+  },
+  "litter scoop-pick up": {
+    "level_0": "Grasp the litter scoop to pick up",
+    "level_1": "Scoop some litter from the box",
+    "level_2": "Clean the litter box"
+  },
+  "squeezer-juice": {
+    "level_0": "Grasp the squeezer to juice",
+    "level_1": "Squeeze the orange to extract the juice",
+    "level_2": "Make fresh orange juice"
+  },
+  "slicer-cut": {
+    "level_0": "Grasp the slicer to cut",
+    "level_1": "Slice some vegetables",
+    "level_2": "Prepare the vegetables"
+  },
+  "bottle-drink": {
+    "level_0": "Grasp the bottle to drink",
+    "level_1": "Take a drink from the bottle",
+    "level_2": "Have a sip"
+  },
+  "spray bottle-clean": {
+    "level_0": "Grasp the spray bottle to clean",
+    "level_1": "Spray the surface to clean it",
+    "level_2": "Clean the surface"
+  },
+  "tongs-stir": {
+    "level_0": "Grasp the tongs to stir",
+    "level_1": "Use the tongs to stir the food",
+    "level_2": "Mix the food"
+  },
+  "brush-sweep": {
+    "level_0": "Grasp the brush to sweep",
+    "level_1": "Sweep the floor with the brush",
+    "level_2": "Clean the floor"
+  },
+  "spray bottle-dispense": {
+    "level_0": "Grasp the spray bottle to dispense",
+    "level_1": "Spray the contents from the bottle",
+    "level_2": "Use the spray bottle"
+  },
+  "baster-poke": {
+    "level_0": "Grasp the baster to poke",
+    "level_1": "Use the baster to poke something",
+    "level_2": "Poke around with the baster"
+  },
+  "pasta fork-mix": {
+    "level_0": "Grasp the pasta fork to mix",
+    "level_1": "Use the pasta fork to combine the ingredients",
+    "level_2": "Mix the ingredients together"
+  },
+  "tongs-flip": {
+    "level_0": "Grasp the tongs to flip",
+    "level_1": "Flip the food with tongs",
+    "level_2": "Turn the food over"
+  },
+  "rolling pin-roll": {
+    "level_0": "Grasp the rolling pin to roll",
+    "level_1": "Roll out the dough with the rolling pin",
+    "level_2": "Flatten the dough"
+  },
+  "fork-lift": {
+    "level_0": "Grasp the fork to lift",
+    "level_1": "Lift a piece of food with the fork",
+    "level_2": "Pick up the food"
+  },
+  "salad tongs-pick up": {
+    "level_0": "Grasp the salad tongs to pick up",
+    "level_1": "Use the tongs to pick up the salad",
+    "level_2": "Serve the salad"
+  },
+  "whisk-mix": {
+    "level_0": "Grasp the whisk to mix",
+    "level_1": "Mix the ingredients using a whisk",
+    "level_2": "Blend the ingredients together"
+  },
+  "spoon-mash": {
+    "level_0": "Grasp the spoon to mash",
+    "level_1": "Mash the potatoes with the spoon",
+    "level_2": "Mash the potatoes"
+  },
+  "spoon-scoop": {
+    "level_0": "Grasp the spoon to scoop",
+    "level_1": "Scoop food with a spoon",
+    "level_2": "Serve the food"
+  },
+  "funnel-pour": {
+    "level_0": "Grasp the funnel to pour",
+    "level_1": "Pour the liquid using the funnel",
+    "level_2": "Transfer the liquid"
+  },
+  "xacto knife-stab": {
+    "level_0": "Grasp the xacto knife to stab",
+    "level_1": "Use an X-Acto knife to make a precise cut",
+    "level_2": "Cut with precision"
+  },
+  "hammer-flatten": {
+    "level_0": "Grasp the hammer to flatten",
+    "level_1": "Hammer a surface to flatten it",
+    "level_2": "Flatten the surface"
+  },
+  "ladle-dispense": {
+    "level_0": "Grasp the ladle to dispense",
+    "level_1": "Use the ladle to serve soup",
+    "level_2": "Serve the soup"
+  },
+  "meat tenderizer-crush": {
+    "level_0": "Grasp the meat tenderizer to crush",
+    "level_1": "Use the meat tenderizer to flatten meat",
+    "level_2": "Flatten the meat"
+  },
+  "mortar-tenderize": {
+    "level_0": "Grasp the mortar to tenderize",
+    "level_1": "Use the mortar to tenderize ingredients",
+    "level_2": "Prepare the ingredients for cooking"
+  },
+  "peeler-peel": {
+    "level_0": "Grasp the peeler to peel",
+    "level_1": "Peel a vegetable with the peeler",
+    "level_2": "Prepare the vegetable for cooking"
+  },
+  "basket-lift": {
+    "level_0": "Grasp the basket to lift",
+    "level_1": "Pick up the basket",
+    "level_2": "Lift the basket"
+  },
+  "spoon-ladle": {
+    "level_0": "Grasp the spoon to ladle",
+    "level_1": "Use the spoon to scoop something up",
+    "level_2": "Scoop up the contents"
+  },
+  "fork-stir": {
+    "level_0": "Grasp the fork to stir",
+    "level_1": "Use a fork to stir the mixture",
+    "level_2": "Mix it up"
+  },
+  "cup-ladle": {
+    "level_0": "Grasp the cup to ladle",
+    "level_1": "Use the cup to scoop liquid.",
+    "level_2": "Scoop the liquid."
+  },
+  "fork-scrape": {
+    "level_0": "Grasp the fork to scrape",
+    "level_1": "Scrape the plate using a fork",
+    "level_2": "Clean off the plate"
+  },
+  "bottle-dispense": {
+    "level_0": "Grasp the bottle to dispense",
+    "level_1": "Pour from the bottle",
+    "level_2": "Dispense the liquid"
+  },
+  "vase-handover": {
+    "level_0": "Grasp the vase to handover",
+    "level_1": "Pass the vase to someone",
+    "level_2": "Give the vase to someone"
+  },
+  "spoon-saute": {
+    "level_0": "Grasp the spoon to saute",
+    "level_1": "Saut\u00e9 the vegetables in the pan",
+    "level_2": "Cook the vegetables"
+  },
+  "garlic press-mash": {
+    "level_0": "Grasp the garlic press to mash",
+    "level_1": "Mash the garlic using a press",
+    "level_2": "Crush the garlic"
+  },
+  "pan-handover": {
+    "level_0": "Grasp the pan to handover",
+    "level_1": "Pass the pan to someone",
+    "level_2": "Give the pan to the person"
+  },
+  "pizza cutter-slice": {
+    "level_0": "Grasp the pizza cutter to slice",
+    "level_1": "Slice the pizza with the cutter",
+    "level_2": "Cut the pizza"
+  },
+  "spatula-pick up": {
+    "level_0": "Grasp the spatula to pick up",
+    "level_1": "Use the spatula to lift something",
+    "level_2": "Lift something with the spatula"
+  },
+  "paint scraper-peel": {
+    "level_0": "Grasp the paint scraper to peel",
+    "level_1": "Use a paint scraper to remove paint",
+    "level_2": "Scrape off the paint"
+  },
+  "toilet brush-brush": {
+    "level_0": "Grasp the toilet brush to brush",
+    "level_1": "Use the toilet brush to clean the toilet",
+    "level_2": "Clean the toilet"
+  },
+  "pitcher-scoop": {
+    "level_0": "Grasp the pitcher to scoop",
+    "level_1": "Pour water with the pitcher",
+    "level_2": "Serve water"
+  },
+  "trowel-flatten": {
+    "level_0": "Grasp the trowel to flatten",
+    "level_1": "Smooth out the soil with the trowel",
+    "level_2": "Prepare the soil"
+  },
+  "scrubber-clean": {
+    "level_0": "Grasp the scrubber to clean",
+    "level_1": "Clean using the scrubber",
+    "level_2": "Scrub the surface"
+  },
+  "back scratcher-scrape": {
+    "level_0": "Grasp the back scratcher to scrape",
+    "level_1": "Use a back scratcher to relieve an itch",
+    "level_2": "Scratch my back"
+  },
+  "brush-dust": {
+    "level_0": "Grasp the brush to dust",
+    "level_1": "Dust off the surface with the brush",
+    "level_2": "Clean the dust off"
+  },
+  "ladle-scoop": {
+    "level_0": "Grasp the ladle to scoop",
+    "level_1": "Scoop soup from a pot using a ladle",
+    "level_2": "Serve the soup"
+  },
+  "rolling pin-flatten": {
+    "level_0": "Grasp the rolling pin to flatten",
+    "level_1": "Flatten the dough with a rolling pin",
+    "level_2": "Roll out the dough"
+  },
+  "pizza cutter-cut": {
+    "level_0": "Grasp the pizza cutter to cut",
+    "level_1": "Use a pizza cutter to slice the pizza",
+    "level_2": "Slice the pizza"
+  },
+  "litter scoop-sift": {
+    "level_0": "Grasp the litter scoop to sift",
+    "level_1": "Sift the litter using the scoop",
+    "level_2": "Clean the litter box"
+  },
+  "spray bottle-spray": {
+    "level_0": "Grasp the spray bottle to spray",
+    "level_1": "Spray the surface with the bottle",
+    "level_2": "Spray the surface"
+  },
+  "salt shaker-dispense": {
+    "level_0": "Grasp the salt shaker to dispense",
+    "level_1": "Shake some salt out from the shaker",
+    "level_2": "Add salt to season"
+  },
+  "spatula-mash": {
+    "level_0": "Grasp the spatula to mash",
+    "level_1": "Mash the potatoes with a spatula",
+    "level_2": "Make the mashed potatoes"
+  },
+  "basting brush-brush": {
+    "level_0": "Grasp the basting brush to brush",
+    "level_1": "Brush the food with the basting brush",
+    "level_2": "Apply the sauce or marinade to the food"
+  },
+  "scooper-lift": {
+    "level_0": "Grasp the scooper to lift",
+    "level_1": "Use the scooper to lift something",
+    "level_2": "Pick up the item"
+  },
+  "pasta fork-lift": {
+    "level_0": "Grasp the pasta fork to lift",
+    "level_1": "Use the pasta fork to lift the pasta",
+    "level_2": "Pick up the pasta"
+  },
+  "funnel-funnel": {
+    "level_0": "Grasp the funnel to funnel",
+    "level_1": "Use the funnel to pour something",
+    "level_2": "Pour the liquid"
+  },
+  "tongs-handover": {
+    "level_0": "Grasp the tongs to handover",
+    "level_1": "Use the tongs to hand over an item",
+    "level_2": "Pass the item using tongs"
+  },
+  "dustpan-lift": {
+    "level_0": "Grasp the dustpan to lift",
+    "level_1": "Lift the dustpan off the ground",
+    "level_2": "Pick up the dustpan"
+  },
+  "scissors-clip": {
+    "level_0": "Grasp the scissors to clip",
+    "level_1": "Use the scissors to make a cut",
+    "level_2": "Cut something"
+  },
+  "spoon-strain": {
+    "level_0": "Grasp the spoon to strain",
+    "level_1": "Use the spoon to strain the contents",
+    "level_2": "Strain what's in the pot"
+  },
+  "screwdriver-scratch": {
+    "level_0": "Grasp the screwdriver to scratch",
+    "level_1": "Use the screwdriver to scratch a surface",
+    "level_2": "Scratch a surface with a tool"
+  },
+  "bottle-shake": {
+    "level_0": "Grasp the bottle to shake",
+    "level_1": "Shake the bottle",
+    "level_2": "Shake it"
+  },
+  "vase-shake": {
+    "level_0": "Grasp the vase to shake",
+    "level_1": "Shake the vase",
+    "level_2": "Give the vase a shake"
+  },
+  "mug-dispense": {
+    "level_0": "Grasp the mug to dispense",
+    "level_1": "Pour the drink from the mug",
+    "level_2": "Serve the drink"
+  },
+  "spatula-handover": {
+    "level_0": "Grasp the spatula to handover",
+    "level_1": "Pass the spatula to someone",
+    "level_2": "Give someone the spatula"
+  },
+  "ladle-pick up": {
+    "level_0": "Grasp the ladle to pick up",
+    "level_1": "Pick up the ladle carefully",
+    "level_2": "Grab the ladle"
+  },
+  "bowl-dispense": {
+    "level_0": "Grasp the bowl to dispense",
+    "level_1": "Pour out the contents of the bowl",
+    "level_2": "Empty the bowl"
+  },
+  "toilet brush-clean": {
+    "level_0": "Grasp the toilet brush to clean",
+    "level_1": "Clean the toilet bowl with the brush",
+    "level_2": "Clean the toilet"
+  },
+  "watering can-drink": {
+    "level_0": "Grasp the watering can to drink",
+    "level_1": "Take a drink from the watering can",
+    "level_2": "Have a sip"
+  },
+  "spoon-flip": {
+    "level_0": "Grasp the spoon to flip",
+    "level_1": "Use the spoon to turn something over",
+    "level_2": "Flip it over"
+  },
+  "scrubber-scrub": {
+    "level_0": "Grasp the scrubber to scrub",
+    "level_1": "Scrub the surface",
+    "level_2": "Clean the area"
+  },
+  "garlic press-squeeze": {
+    "level_0": "Grasp the garlic press to squeeze",
+    "level_1": "Use the garlic press to crush garlic",
+    "level_2": "Crush the garlic"
+  },
+  "pitcher-mix": {
+    "level_0": "Grasp the pitcher to mix",
+    "level_1": "Mix the contents in the pitcher",
+    "level_2": "Blend everything together"
+  },
+  "spoon-stir": {
+    "level_0": "Grasp the spoon to stir",
+    "level_1": "Stir a bowl of soup",
+    "level_2": "Mix the soup"
+  },
+  "spray nozzle-spray": {
+    "level_0": "Grasp the spray nozzle to spray",
+    "level_1": "Use the spray nozzle to start spraying",
+    "level_2": "Start spraying"
+  },
+  "frying pan-tenderize": {
+    "level_0": "Grasp the frying pan to tenderize",
+    "level_1": "Use the frying pan to tenderize the meat",
+    "level_2": "Tenderize the meat"
+  },
+  "masher-flatten": {
+    "level_0": "Grasp the masher to flatten",
+    "level_1": "Use the masher to flatten the ingredients",
+    "level_2": "Mash the ingredients"
+  },
+  "measuring cup-pour": {
+    "level_0": "Grasp the measuring cup to pour",
+    "level_1": "Pour ingredients from a measuring cup",
+    "level_2": "Pour the ingredients"
+  },
+  "mug-drink": {
+    "level_0": "Grasp the mug to drink",
+    "level_1": "Take a sip from the mug",
+    "level_2": "Have a drink"
+  },
+  "tongs-poke": {
+    "level_0": "Grasp the tongs to poke",
+    "level_1": "Use the tongs to poke something",
+    "level_2": "Poke with the tongs"
+  },
+  "pasta fork-stir": {
+    "level_0": "Grasp the pasta fork to stir",
+    "level_1": "Stir the pasta",
+    "level_2": "Mix the pasta evenly"
+  },
+  "bowl-drink": {
+    "level_0": "Grasp the bowl to drink",
+    "level_1": "Hold the bowl to take a drink",
+    "level_2": "Have a sip from the bowl"
+  },
+  "duster-sweep": {
+    "level_0": "Grasp the duster to sweep",
+    "level_1": "Use the duster to clean the surface",
+    "level_2": "Dust off the surface"
+  },
+  "scrubber-handover": {
+    "level_0": "Grasp the scrubber to handover",
+    "level_1": "Hand over the scrubber",
+    "level_2": "Pass the scrubber"
+  },
+  "ladle-pour": {
+    "level_0": "Grasp the ladle to pour",
+    "level_1": "Pour the soup into a bowl",
+    "level_2": "Serve the soup"
+  },
+  "mug-flatten": {
+    "level_0": "Grasp the mug to flatten",
+    "level_1": "Flatten the surface using the mug",
+    "level_2": "Press down to flatten"
+  },
+  "pot-drink": {
+    "level_0": "Grasp the pot to drink",
+    "level_1": "Lift the pot to take a sip",
+    "level_2": "Drink from the pot"
+  },
+  "xacto knife-poke": {
+    "level_0": "Grasp the xacto knife to poke",
+    "level_1": "Poke using an X-Acto knife",
+    "level_2": "Make a hole with the knife"
+  },
+  "pasta fork-scoop": {
+    "level_0": "Grasp the pasta fork to scoop",
+    "level_1": "Scoop the pasta using the fork",
+    "level_2": "Serve the pasta"
+  },
+  "dustpan-scoop": {
+    "level_0": "Grasp the dustpan to scoop",
+    "level_1": "Use the dustpan to scoop up the debris",
+    "level_2": "Clean up the mess"
+  },
+  "pepper grinder-grind": {
+    "level_0": "Grasp the pepper grinder to grind",
+    "level_1": "Grind some pepper",
+    "level_2": "Add freshly ground pepper"
+  },
+  "scissors-scratch": {
+    "level_0": "Grasp the scissors to scratch",
+    "level_1": "Use the scissors to scratch a surface",
+    "level_2": "Scratch the surface"
+  },
+  "skillet-pour": {
+    "level_0": "Grasp the skillet to pour",
+    "level_1": "Pour the ingredients from the skillet",
+    "level_2": "Transfer what's in the skillet"
+  },
+  "salad tongs-stir": {
+    "level_0": "Grasp the salad tongs to stir",
+    "level_1": "Stir the salad using the tongs",
+    "level_2": "Mix the salad"
+  },
+  "watering can-pour": {
+    "level_0": "Grasp the watering can to pour",
+    "level_1": "Water the plants with the watering can",
+    "level_2": "Give the plants some water"
+  },
+  "tongs-scoop": {
+    "level_0": "Grasp the tongs to scoop",
+    "level_1": "Use the tongs to pick up an item",
+    "level_2": "Grab something with the tongs"
+  },
+  "slicer-peel": {
+    "level_0": "Grasp the slicer to peel",
+    "level_1": "Peel the fruit or vegetable using the slicer",
+    "level_2": "Peel it"
+  },
+  "sponge-scrub": {
+    "level_0": "Grasp the sponge to scrub",
+    "level_1": "Scrub the surface clean",
+    "level_2": "Clean the area"
+  },
+  "trowel-flip": {
+    "level_0": "Grasp the trowel to flip",
+    "level_1": "Use the trowel to flip the soil",
+    "level_2": "Turn over the soil"
+  },
+  "hammer-hammer": {
+    "level_0": "Grasp the hammer to hammer",
+    "level_1": "Use the hammer to drive the nail",
+    "level_2": "Drive in the nail"
+  },
+  "spoon-poke": {
+    "level_0": "Grasp the spoon to poke",
+    "level_1": "Use the spoon to poke",
+    "level_2": "Poke with the spoon"
+  },
+  "fork-poke": {
+    "level_0": "Grasp the fork to poke",
+    "level_1": "Poke with a fork",
+    "level_2": "Use the fork to poke"
+  },
+  "squeezer-squeeze": {
+    "level_0": "Grasp the squeezer to squeeze",
+    "level_1": "Use the squeezer to press the juice",
+    "level_2": "Extract the juice"
+  },
+  "scrubber-sweep": {
+    "level_0": "Grasp the scrubber to sweep",
+    "level_1": "Sweep the floor with the scrubber",
+    "level_2": "Clean the floor"
+  },
+  "pan-drink": {
+    "level_0": "Grasp the pan to drink",
+    "level_1": "Drink from the pan",
+    "level_2": "Take a sip"
+  },
+  "scissors-poke": {
+    "level_0": "Grasp the scissors to poke",
+    "level_1": "Use scissors to poke something",
+    "level_2": "Poke with it"
+  },
+  "spatula-dig": {
+    "level_0": "Grasp the spatula to dig",
+    "level_1": "Use the spatula to dig into the soil",
+    "level_2": "Start digging into the ground"
+  },
+  "meat tenderizer-hammer": {
+    "level_0": "Grasp the meat tenderizer to hammer",
+    "level_1": "Use the meat tenderizer to pound the meat",
+    "level_2": "Flatten the meat"
+  },
+  "pan-flatten": {
+    "level_0": "Grasp the pan to flatten",
+    "level_1": "Use the pan to flatten the dough",
+    "level_2": "Flatten the dough"
+  },
+  "rolling pin-handover": {
+    "level_0": "Grasp the rolling pin to handover",
+    "level_1": "Hand over the rolling pin",
+    "level_2": "Pass the rolling pin"
+  },
+  "hammer-pound": {
+    "level_0": "Grasp the hammer to pound",
+    "level_1": "Pound the nail with the hammer",
+    "level_2": "Drive the nail into the surface"
+  },
+  "spoon-skim": {
+    "level_0": "Grasp the spoon to skim",
+    "level_1": "Skim the top layer of the soup with the spoon",
+    "level_2": "Remove the top layer"
+  },
+  "duster-dust": {
+    "level_0": "Grasp the duster to dust",
+    "level_1": "Dust the furniture",
+    "level_2": "Clean the surfaces"
+  },
+  "spoon-mix": {
+    "level_0": "Grasp the spoon to mix",
+    "level_1": "Use the spoon to mix the ingredients",
+    "level_2": "Combine the ingredients"
+  },
+  "fork-mix": {
+    "level_0": "Grasp the fork to mix",
+    "level_1": "Mix the ingredients in the bowl using the fork",
+    "level_2": "Combine everything together"
+  },
+  "pot-pour": {
+    "level_0": "Grasp the pot to pour",
+    "level_1": "Pour from the pot",
+    "level_2": "Transfer the contents"
+  },
+  "duster-clean": {
+    "level_0": "Grasp the duster to clean",
+    "level_1": "Use the duster to clean a surface",
+    "level_2": "Dust the area"
+  },
+  "bowl-handover": {
+    "level_0": "Grasp the bowl to handover",
+    "level_1": "Pass the bowl to someone",
+    "level_2": "Give it to them"
+  },
+  "pitcher-handover": {
+    "level_0": "Grasp the pitcher to handover",
+    "level_1": "Pass the pitcher to someone",
+    "level_2": "Give this to someone"
+  },
+  "strainer-strain": {
+    "level_0": "Grasp the strainer to strain",
+    "level_1": "Use the strainer to drain the liquid",
+    "level_2": "Drain the liquid"
+  },
+  "paint roller-paint": {
+    "level_0": "Grasp the paint roller to paint",
+    "level_1": "Use the paint roller to paint the wall",
+    "level_2": "Start painting the wall"
+  },
+  "reamer-juice": {
+    "level_0": "Grasp the reamer to juice",
+    "level_1": "Use the reamer to juice a fruit",
+    "level_2": "Extract juice from the fruit"
+  },
+  "fork-stab": {
+    "level_0": "Grasp the fork to stab",
+    "level_1": "Use the fork to pick up food",
+    "level_2": "Eat using the fork"
+  },
+  "pan-mix": {
+    "level_0": "Grasp the pan to mix",
+    "level_1": "Mix the ingredients in the pan",
+    "level_2": "Combine the ingredients"
+  },
+  "screwdriver-stab": {
+    "level_0": "Grasp the screwdriver to stab",
+    "level_1": "Stab using a screwdriver",
+    "level_2": "Puncture something"
+  },
+  "trowel-poke": {
+    "level_0": "Grasp the trowel to poke",
+    "level_1": "Use the trowel to poke into the soil",
+    "level_2": "Start digging into the soil"
+  },
+  "litter scoop-handover": {
+    "level_0": "Grasp the litter scoop to handover",
+    "level_1": "Hand over the litter scoop to someone",
+    "level_2": "Give the scoop to someone"
+  },
+  "vase-scoop": {
+    "level_0": "Grasp the vase to scoop",
+    "level_1": "Scoop liquid or material from the vase",
+    "level_2": "Use the vase to scoop"
+  },
+  "meat tenderizer-flatten": {
+    "level_0": "Grasp the meat tenderizer to flatten",
+    "level_1": "Flatten the meat with a tenderizer",
+    "level_2": "Tenderize the meat"
+  },
+  "slotted spoon-sift": {
+    "level_0": "Grasp the slotted spoon to sift",
+    "level_1": "Use a slotted spoon to sift ingredients",
+    "level_2": "Separate the ingredients using the spoon"
+  },
+  "cup-drink": {
+    "level_0": "Grasp the cup to drink",
+    "level_1": "Drink from the cup",
+    "level_2": "Have a sip"
+  },
+  "strainer-handover": {
+    "level_0": "Grasp the strainer to handover",
+    "level_1": "Hand over the strainer to someone",
+    "level_2": "Give the strainer to someone"
+  },
+  "meat tenderizer-mash": {
+    "level_0": "Grasp the meat tenderizer to mash",
+    "level_1": "Use the meat tenderizer to mash the meat",
+    "level_2": "Tenderize the meat"
+  },
+  "pan-pour": {
+    "level_0": "Grasp the pan to pour",
+    "level_1": "Pour the contents out of the pan",
+    "level_2": "Empty the pan"
+  },
+  "coat hanger-handover": {
+    "level_0": "Grasp the coat hanger to handover",
+    "level_1": "Pick up the coat hanger to give it to someone",
+    "level_2": "Pass the coat hanger to someone"
+  },
+  "cup-dispense": {
+    "level_0": "Grasp the cup to dispense",
+    "level_1": "Pick up the cup and pour out its contents",
+    "level_2": "Pour out what\u2019s in the cup"
+  },
+  "salad tongs-lift": {
+    "level_0": "Grasp the salad tongs to lift",
+    "level_1": "Use the salad tongs to serve the salad",
+    "level_2": "Serve the salad"
+  },
+  "pasta fork-pick up": {
+    "level_0": "Grasp the pasta fork to pick up",
+    "level_1": "Use the pasta fork to lift the noodles",
+    "level_2": "Serve the pasta"
+  },
+  "basket-pick up": {
+    "level_0": "Grasp the basket to pick up",
+    "level_1": "Pick up the basket",
+    "level_2": "Carry the basket"
+  },
+  "mixing bowl-pour": {
+    "level_0": "Grasp the mixing bowl to pour",
+    "level_1": "Pour the ingredients into another container",
+    "level_2": "Transfer the mixture"
+  },
+  "hammer-mash": {
+    "level_0": "Grasp the hammer to mash",
+    "level_1": "Use the hammer to mash something",
+    "level_2": "Crush with the hammer"
+  },
+  "grater-grate": {
+    "level_0": "Grasp the grater to grate",
+    "level_1": "Use the grater to shred the cheese",
+    "level_2": "Grate the cheese"
+  },
+  "paint scraper-scratch": {
+    "level_0": "Grasp the paint scraper to scratch",
+    "level_1": "Use the paint scraper to scratch off the paint",
+    "level_2": "Scrape off the paint"
+  },
+  "brush-brush": {
+    "level_0": "Grasp the brush to brush",
+    "level_1": "Brush your hair",
+    "level_2": "Fix your hair"
+  },
+  "ladle-ladle": {
+    "level_0": "Grasp the ladle to ladle",
+    "level_1": "Scoop soup into a bowl",
+    "level_2": "Serve the soup"
+  },
+  "masher-crush": {
+    "level_0": "Grasp the masher to crush",
+    "level_1": "Mash the ingredients with the masher",
+    "level_2": "Smash the ingredients"
+  },
+  "cup-mix": {
+    "level_0": "Grasp the cup to mix",
+    "level_1": "Stir something in the cup",
+    "level_2": "Mix the contents"
+  },
+  "scooper-pick up": {
+    "level_0": "Grasp the scooper to pick up",
+    "level_1": "Use the scooper to pick something up",
+    "level_2": "Scoop it up"
+  },
+  "spatula-mix": {
+    "level_0": "Grasp the spatula to mix",
+    "level_1": "Mix the ingredients in the pan using the spatula",
+    "level_2": "Combine everything in the pan"
+  },
+  "strainer-sift": {
+    "level_0": "Grasp the strainer to sift",
+    "level_1": "Use the strainer to sift flour",
+    "level_2": "Sift the flour"
+  },
+  "ladle-stir": {
+    "level_0": "Grasp the ladle to stir",
+    "level_1": "Stir the soup with the ladle",
+    "level_2": "Mix the soup"
+  },
+  "spatula-scoop": {
+    "level_0": "Grasp the spatula to scoop",
+    "level_1": "Use the spatula to scoop up food",
+    "level_2": "Scoop up the food"
+  },
+  "clip-squeeze": {
+    "level_0": "Grasp the clip to squeeze",
+    "level_1": "Squeeze the clip",
+    "level_2": "Pinch it closed"
+  },
+  "mug-handover": {
+    "level_0": "Grasp the mug to handover",
+    "level_1": "Pick up the mug to give it to someone",
+    "level_2": "Pass the mug to someone"
+  },
+  "meat tenderizer-pound": {
+    "level_0": "Grasp the meat tenderizer to pound",
+    "level_1": "Use the meat tenderizer to flatten the meat",
+    "level_2": "Tenderize the meat"
+  },
+  "scooper-scoop": {
+    "level_0": "Grasp the scooper to scoop",
+    "level_1": "Use the scooper to serve",
+    "level_2": "Serve some food"
+  },
+  "fork-flip": {
+    "level_0": "Grasp the fork to flip",
+    "level_1": "Use the fork to flip something over",
+    "level_2": "Flip the food"
+  },
+  "tongs-squeeze": {
+    "level_0": "Grasp the tongs to squeeze",
+    "level_1": "Squeeze something using tongs",
+    "level_2": "Use the tongs to squeeze"
+  },
+  "tongs-scrape": {
+    "level_0": "Grasp the tongs to scrape",
+    "level_1": "Scrape the surface with the tongs",
+    "level_2": "Scrape the bottom of the pan with the tongs"
+  },
+  "fork-mash": {
+    "level_0": "Grasp the fork to mash",
+    "level_1": "Mash the potatoes with a fork",
+    "level_2": "Mash the potatoes"
+  },
+  "cup-shake": {
+    "level_0": "Grasp the cup to shake",
+    "level_1": "Shake the cup",
+    "level_2": "Dry the cup by shaking it"
+  },
+  "ladle-lift": {
+    "level_0": "Grasp the ladle to lift",
+    "level_1": "Lift the ladle",
+    "level_2": "Pick up the ladle"
+  },
+  "funnel-pick up": {
+    "level_0": "Grasp the funnel to pick up",
+    "level_1": "Pick up the funnel",
+    "level_2": "Grab the funnel"
+  },
+  "squeezer-handover": {
+    "level_0": "Grasp the squeezer to handover",
+    "level_1": "Pass the squeezer to someone",
+    "level_2": "Give the squeezer to someone"
+  },
+  "keg-drink": {
+    "level_0": "Grasp the keg to drink",
+    "level_1": "Drink from the keg",
+    "level_2": "Have a drink"
+  },
+  "mug-scoop": {
+    "level_0": "Grasp the mug to scoop",
+    "level_1": "Scoop some sugar with a mug",
+    "level_2": "Use the mug to gather sugar"
+  },
+  "salad tongs-handover": {
+    "level_0": "Grasp the salad tongs to handover",
+    "level_1": "Hand over the salad tongs",
+    "level_2": "Pass the tongs"
+  },
+  "fork-pick up": {
+    "level_0": "Grasp the fork to pick up",
+    "level_1": "Use a fork to lift the item",
+    "level_2": "Pick up the fork"
+  },
+  "spatula-skim": {
+    "level_0": "Grasp the spatula to skim",
+    "level_1": "Skim the surface of the liquid with the spatula",
+    "level_2": "Skim with the spatula"
+  },
+  "frying pan-mash": {
+    "level_0": "Grasp the frying pan to mash",
+    "level_1": "Mash with the frying pan",
+    "level_2": "Use the frying pan to mash"
+  },
+  "tiller-scrape": {
+    "level_0": "Grasp the tiller to scrape",
+    "level_1": "Scrape the surface using the tiller",
+    "level_2": "Scrape the soil"
+  },
+  "cup-pick up": {
+    "level_0": "Grasp the cup to pick up",
+    "level_1": "Pick up the cup",
+    "level_2": "Lift the cup"
+  },
+  "mug-pick up": {
+    "level_0": "Grasp the mug to pick up",
+    "level_1": "Pick up the mug",
+    "level_2": "Grab the mug"
+  },
+  "mug-pour": {
+    "level_0": "Grasp the mug to pour",
+    "level_1": "Pour coffee out of the mug",
+    "level_2": "Pour me a drink from the mug"
+  },
+  "bottle-clean": {
+    "level_0": "Grasp the bottle to clean",
+    "level_1": "Clean the bottle",
+    "level_2": "Clean with the bottle"
+  },
+  "mug-crush": {
+    "level_0": "Grasp the mug to crush",
+    "level_1": "Crush something with the mug",
+    "level_2": "Use the mug to crush something"
+  },
+  "bottle-pour": {
+    "level_0": "Grasp the bottle to pour",
+    "level_1": "Pour the liquid out of the bottle",
+    "level_2": "Pour me a drink"
+  },
+  "spoon-lift": {
+    "level_0": "Grasp the spoon to lift",
+    "level_1": "Lift the spoon",
+    "level_2": "Pick up the spoon"
+  },
+  "slicer-open": {
+    "level_0": "Grasp the slicer to open",
+    "level_1": "Use the slicer to open something",
+    "level_2": "Open something with the slicer"
+  },
+  "cup-pour": {
+    "level_0": "Grasp the cup to pour",
+    "level_1": "Pour the drink",
+    "level_2": "Pour me a drink"
+  },
+  "bowl-scoop": {
+    "level_0": "Grasp the bowl to scoop",
+    "level_1": "Scoop with the bowl",
+    "level_2": "Use the bowl to scoop"
+  },
+  "basket-hang": {
+    "level_0": "Grasp the basket to hang",
+    "level_1": "Hang the basket on the hook",
+    "level_2": "Put the basket on the hook"
+  },
+  "spoon-scrape": {
+    "level_0": "Grasp the spoon to scrape",
+    "level_1": "Scrape the bottom of the pot with a spoon",
+    "level_2": "Scrape the bottom of the pot"
+  },
+  "rolling pin-crush": {
+    "level_0": "Grasp the rolling pin to crush",
+    "level_1": "Use the rolling pin to crush something",
+    "level_2": "Crush something with the rolling pin"
+  },
+  "frying pan-flatten": {
+    "level_0": "Grasp the frying pan to flatten",
+    "level_1": "Flatten something with the frying pan",
+    "level_2": "Use the frying pan to flatten something"
+  },
+  "screwdriver-open": {
+    "level_0": "Grasp the screwdriver to open",
+    "level_1": "Use a screwdriver to open the item",
+    "level_2": "Undo that screw"
+  },
+  "dustpan-pick up": {
+    "level_0": "Grasp the dustpan to pick up",
+    "level_1": "Pick up dirt using the dustpan",
+    "level_2": "Sweep up the dirt"
+  }
+}

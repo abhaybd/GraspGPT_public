@@ -256,7 +256,7 @@ def main(args, cfg):
 
     # load task levels
     if args.use_levels:
-        task_levels = json.load(open("/net/nfs2.prior/arijitr/research/semantic_grasping/GraspGPT_public/gcngrasp/data/reworded_tasks.json"))
+        task_levels = json.load(open("reworded_tasks.json"))
 
     # load GraspGPT
     model = load_model(cfg)
