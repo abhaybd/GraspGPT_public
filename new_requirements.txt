@@ -11,3 +11,4 @@ msgpack
 msgpack-numpy
 yacs
 openai
+lmdb==1.4.0

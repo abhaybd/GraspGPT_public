@@ -104,7 +104,8 @@ def load_pc_and_grasps(data_dir, obj_name, view_idx: int):
 
 def run_eval(
     dataset: TaskGraspDataset,
-    data_dir: str,
+    la_tg_dir: str,
+    tg_img_dir: str,
     obj_id: str,
     view_idx: str,
     task_verb: str,
@@ -115,7 +116,7 @@ def run_eval(
     task_text: str = None,
 ):
     try:
-        pc, grasps = load_pc_and_grasps(data_dir, obj_id, view_idx)
+        pc, grasps = load_pc_and_grasps(tg_img_dir, obj_id, view_idx)
     except:
         print(f"no point cloud and grasp")
         return None
@@ -129,8 +130,8 @@ def run_eval(
 
     object_class = obj_id.split("_", 1)[1]
     
-    obj_desc_dir = os.path.join(data_dir, "obj_gpt_v2", object_class)
-    task_desc_dir = os.path.join(data_dir, "task_gpt_v2", task_verb)
+    obj_desc_dir = os.path.join(la_tg_dir, "obj_gpt_v2", object_class)
+    task_desc_dir = os.path.join(la_tg_dir, "task_gpt_v2", task_verb)
 
 
     preds = []
@@ -228,10 +229,11 @@ def run_eval(
     }
 
 def main(args, cfg):
-    data_dir = args.data_dir
+    la_tg_dir = args.la_tg_dir
+    tg_img_dir = args.tg_img_dir
 
     # load train ids
-    target_folder = "data/taskgrasp/splits_final/"
+    target_folder = os.path.join(la_tg_dir, "splits_final")
     split_idx = cfg.split_idx
     split_mode = cfg.split_mode
     train_obj_grasp_tasks = {}
@@ -281,20 +283,21 @@ def main(args, cfg):
                         continue
                     for level in task_levels[level_dict_key]:
                         task_text = task_levels[level_dict_key][level]
-                        results = run_eval(tg_dataset, data_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model, train_obj_grasp_tasks, task_text)
+                        results = run_eval(tg_dataset, la_tg_dir, tg_img_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model, train_obj_grasp_tasks, task_text)
                         if results is not None:
                             top_1_results_level[level].append(results["top-1"])
                             all_results.append((level, task_text, results["top-1"]))
                 else:
-                    results = run_eval(tg_dataset, data_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model, train_obj_grasp_tasks)
+                    results = run_eval(tg_dataset, la_tg_dir, tg_img_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model, train_obj_grasp_tasks)
                     if results is not None:
                         top_1_results.append(results["top-1"])
                         mean_avg_prec.append(results["avg_prec"])
-                    
+
+    results_folder = "/results" if os.path.isdir("/results") else "gcngrasp/results"
     if args.use_levels:
         run_name = args.cfg_file.split("/")[-1].split(".")[0]
         # save all_results in csv for viewing
-        with open(os.path.join("gcngrasp", "results", f"{run_name}_levels_qual.csv"), "w") as f:
+        with open(os.path.join(results_folder, f"{run_name}_levels_qual.csv"), "w") as f:
             f.write("level,task_desc,correct_pred\n")
             for level, task_desc, correct_pred in all_results:
                 f.write(f"{level},{task_desc},{correct_pred}\n")
@@ -305,7 +308,7 @@ def main(args, cfg):
         #save to csv
 
         log_entry_name = f"{cfg.split_mode}_{cfg.split_idx}"
-        with open(os.path.join("gcngrasp", "results", f"{run_name}_top_1_results_levels.csv"), "w") as f:
+        with open(os.path.join(results_folder, f"{run_name}_top_1_results_levels.csv"), "w") as f:
             for level, results in top_1_results_level.items():
                 f.write(f"{log_entry_name},{level},{np.mean(results):.2%}\n")
     else:
@@ -317,7 +320,7 @@ def main(args, cfg):
         #save to csv
         run_name = args.cfg_file.split("/")[-1].split(".")[0]
         log_entry_name = f"{cfg.split_mode}_{cfg.split_idx}"
-        with open(os.path.join("gcngrasp", "results", f"{run_name}_top_1_results.csv"), "w") as f:
+        with open(os.path.join(results_folder, f"{run_name}_top_1_results.csv"), "w") as f:
             f.write(f"{log_entry_name},{np.mean(top_1_results):.2%},{np.mean(mean_avg_prec):.2%}\n")
     
 
@@ -328,7 +331,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="visualize data and stuff")
     parser.add_argument('--task', help='', default='scoop')
     parser.add_argument('--obj_class', help='', default='spatula')
-    parser.add_argument('--data_dir', help='location of sample data', default='data/taskgrasp')
+    parser.add_argument("--la-tg-dir", default="/weka/prior/abhayd/semantic-grasping-datasets/LA-TaskGrasp")
+    parser.add_argument("--tg-img-dir", default="/weka/prior/abhayd/semantic-grasping-datasets/taskgrasp_image")
     parser.add_argument('--obj_name', help='', default='spatula')
     parser.add_argument('--use_levels', help='', action='store_true')
     parser.add_argument(
@@ -367,8 +371,8 @@ if __name__ == '__main__':
     assert len(weight_files) == 1
     cfg.weight_file = os.path.join(experiment_dir, 'weights', weight_files[0])
 
-    if args.data_dir == '':
-        args.data_dir = os.path.join(cfg.base_dir, 'sample_data/pcs')
+    # if args.data_dir == '':
+    #     args.data_dir = os.path.join(cfg.base_dir, 'sample_data/pcs')
 
     cfg.freeze()
     print(cfg)

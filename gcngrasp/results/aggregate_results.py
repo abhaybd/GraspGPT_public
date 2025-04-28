@@ -1,8 +1,8 @@
 import csv
 import os
 
-res_folder = "/net/nfs2.prior/arijitr/research/semantic_grasping/GraspGPT_public/gcngrasp/results"
-results_files = os.listdir("/net/nfs2.prior/arijitr/research/semantic_grasping/GraspGPT_public/gcngrasp/results")
+res_folder = "/results" if os.path.isdir("/results") else "gcngrasp/results"
+results_files = os.listdir(res_folder)
 results_files = [f for f in results_files if f.endswith("results.csv")]
 
 splitmode_accuracies = {}
