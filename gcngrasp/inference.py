@@ -209,7 +209,11 @@ class GraspGPTPredictor:
         grasp_pos = grasps[:, :3, 3]
         tree = KDTree(pc[:, :3])
 
-        dists, _ = tree.query(grasp_pos, k=1)
+        try:
+            dists, _ = tree.query(grasp_pos, k=1)
+        except ValueError as e:
+            print(f"Error, counting as failure: {e}")
+            return []
         if verbosity >= 1:
             print("Grasp dists: ", dists)
         return np.nonzero(dists < 0.05)[0]
