@@ -14,4 +14,4 @@ beaker session create -w ai2/abhayd --budget ai2/prior \
     --cluster ai2/neptune-cirrascale \
     --port 8080 \
     -- \
-    /weka/prior/abhayd/envs/graspgpt/bin/python gcngrasp/inference_server.py
+    /bin/bash -c "/weka/prior/abhayd/envs/graspgpt/bin/python gcngrasp/inference_server.py ; /bin/bash"
