@@ -65,8 +65,12 @@ class MaskDetector:
             return None
 
         with torch.autocast(device_type=torch.device(self.device).type, dtype=torch.bfloat16):
-            self.sam_predictor.set_image(image)
-            masks, scores, _ = self.sam_predictor.predict(box=bbox[None])
+            try:
+                self.sam_predictor.set_image(image)
+                masks, scores, _ = self.sam_predictor.predict(box=bbox[None])
+            except Exception as e:
+                print(f"Error predicting mask: {e}")
+                return None
 
         mask_idx = np.argmax(scores)
         mask = masks[mask_idx].astype(bool)

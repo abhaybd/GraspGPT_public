@@ -45,7 +45,8 @@ DRAW_POINTS = np.array([
 ])  # in grasp frame
 
 GPT_CACHE = {}
-
+CACHE_HIT = 0
+CACHE_MISS = 0
 
 def load_cfg(cfg_path: str):
     cfg = get_cfg_defaults()
@@ -69,8 +70,13 @@ def gpt(client: OpenAI, text: str):
     """
     OpenAI GPT API
     """
+    global CACHE_HIT, CACHE_MISS
     if text in GPT_CACHE:
+        CACHE_HIT += 1
+        print(f"Cache hit rate: {CACHE_HIT}/{CACHE_HIT + CACHE_MISS}={CACHE_HIT / (CACHE_HIT + CACHE_MISS):.1%}")
         return GPT_CACHE[text]
+    CACHE_MISS += 1
+    print(f"Cache hit rate: {CACHE_HIT}/{CACHE_HIT + CACHE_MISS}={CACHE_HIT / (CACHE_HIT + CACHE_MISS):.1%}")
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         # model="gpt-3.5-turbo-0125",
@@ -228,9 +234,14 @@ class GraspGPTPredictor:
         enc_image = b64encode(image_bytes.getvalue()).decode("utf-8")
 
         cache_key = f"{task}_{enc_image}"
+        global CACHE_HIT, CACHE_MISS
         if cache_key in GPT_CACHE:
+            CACHE_HIT += 1
+            print(f"Cache hit rate: {CACHE_HIT}/{CACHE_HIT + CACHE_MISS}={CACHE_HIT / (CACHE_HIT + CACHE_MISS):.1%}")
             metadata: TaskMetadata = GPT_CACHE[cache_key]
         else:
+            CACHE_MISS += 1
+            print(f"Cache hit rate: {CACHE_HIT}/{CACHE_HIT + CACHE_MISS}={CACHE_HIT / (CACHE_HIT + CACHE_MISS):.1%}")
             response = self.openai_client.beta.chat.completions.parse(
                 model="gpt-4o",
                 messages=[
@@ -325,7 +336,7 @@ class GraspGPTPredictor:
         assert len(probs) == len(filtered_grasps) and len(preds) == len(filtered_grasps)
         return probs, preds
 
-    def predict_grasp(self, image: Image.Image, depth: np.ndarray, cam_K: np.ndarray, grasps: np.ndarray, task_ins_txt: str, verbosity: int = 0):
+    def predict_grasp(self, image: Image.Image, depth: np.ndarray, cam_K: np.ndarray, grasps: np.ndarray, task_ins_txt: str, verbosity: int = 0) -> int | None:
         probs, _ = self.predict(image, depth, cam_K, grasps, task_ins_txt, verbosity=verbosity)
         grasp_idx = np.argmax(probs).item()
 

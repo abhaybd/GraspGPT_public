@@ -14,3 +14,5 @@ openai
 lmdb==1.4.0
 fastapi[standard]
 Pillow
+wandb[media]
+hydra-core
