@@ -12,7 +12,7 @@ import numpy.typing as npt
 import yaml
 from tqdm import tqdm
 
-from inference import GraspGPTPredictor, load_cfg
+from inference import GraspGPTPredictor, load_cfg, save_cache, load_cache, GPT_CACHE
 
 class SimEvalConfig(BaseModel):
     obs_dir: str
@@ -117,6 +117,9 @@ def main():
     cfg = load_cfg(config.model_config_path)
     predictor = GraspGPTPredictor(cfg)
 
+    gpt_cache_path = "/results/gpt_cache.pkl"
+    GPT_CACHE.update(load_cache(gpt_cache_path))
+
     out_dir = "/results"
     task_name = os.getenv("GANTRY_TASK_NAME", None)
     run = wandb.init(
@@ -153,6 +156,8 @@ def main():
     run.summary["results"] = results
     run.summary["accuracy"] = results["n_succ"] / results["n_samples"]
     print(f"Average top-1 accuracy: {results['n_succ'] / results['n_samples']:.1%}")
+
+    save_cache(gpt_cache_path)
 
     if len(succ_viz) > 0:
         if len(succ_viz) > 100:

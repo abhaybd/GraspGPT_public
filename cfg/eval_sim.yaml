@@ -1,6 +1,6 @@
 obs_dir: /weka/prior/abhayd/semantic-grasping-datasets/0422_1646/observations_test
 task_dir: /weka/prior/abhayd/semantic-grasping-datasets/0422_1646/task_point_v2_test
-batch_size: 16
+batch_size: 64
 far_clip: 1.1
-dataloader_workers: 16
+dataloader_workers: 64
 model_config_path: cfg/eval/gcngrasp/gcngrasp_split_mode_t_split_idx_3_.yml

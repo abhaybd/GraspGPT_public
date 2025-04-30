@@ -18,6 +18,7 @@ from PIL import Image, ImageDraw
 from io import BytesIO
 from base64 import b64encode, b64decode
 from scipy.spatial import KDTree
+import pickle
 logging.set_verbosity_error()
 
 from pydantic import BaseModel
@@ -43,6 +44,23 @@ DRAW_POINTS = np.array([
     [-0.041, 0, 0.066],
     [-0.041, 0, 0.112],
 ])  # in grasp frame
+
+def save_cache(path: str, gpt_cache: dict | None = None, overwrite: bool = True):
+    global GPT_CACHE
+    if gpt_cache is None:
+        gpt_cache = GPT_CACHE
+    if os.path.exists(path):
+        if overwrite:
+            with open(path, "wb") as f:
+                pickle.dump(gpt_cache, f)
+        else:
+            raise FileExistsError("gpt_cache.pkl already exists, set overwrite=True to overwrite")
+
+def load_cache(path: str):
+    if os.path.exists(path):
+        with open(path, "rb") as f:
+            return pickle.load(f)
+    return {}
 
 GPT_CACHE = {}
 CACHE_HIT = 0
