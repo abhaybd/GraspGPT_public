@@ -228,7 +228,7 @@ class GraspGPTPredictor:
         grasps = grasps @ grasp_trf[None]
         return grasps
 
-    def _get_task_metadata(self, task: str, image: Image.Image, verbosity: int = 0):
+    def _get_task_metadata(self, task: str, image: Image.Image, verbosity: int = 0) -> tuple[str, str] | tuple[None, None]:
         class TaskMetadata(BaseModel):
             obj_class: str
             task_verb: str
@@ -269,13 +269,20 @@ class GraspGPTPredictor:
                 ],
                 response_format=TaskMetadata
             )
-            metadata: TaskMetadata = response.choices[0].message.parsed
+            metadata_message = response.choices[0].message
+            metadata: TaskMetadata | None = metadata_message.parsed
+            GPT_CACHE[cache_key] = metadata
+            if metadata is None:
+                print(f"Error, failed to parse metadata for task \"{task}\". Refusal: {metadata_message.refusal}")
+                return None, None
         if verbosity >= 1:
             print(f"Metadata for task \"{task}\": {metadata.model_dump_json()}")
         return metadata.obj_class, metadata.task_verb
 
     def predict(self, image: Image.Image, depth: np.ndarray, cam_K: np.ndarray, grasps: np.ndarray, task_ins_txt: str, verbosity: int = 0):
         obj_class, task_verb = self._get_task_metadata(task_ins_txt, image, verbosity=verbosity)
+        if obj_class is None or task_verb is None:
+            return None, None
         pc_input = self._get_pc(image, depth, cam_K, obj_class, verbosity=verbosity)
         if pc_input is None:
             return None, None
