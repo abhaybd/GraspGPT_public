@@ -336,24 +336,6 @@ def main(args, cfg):
         with open(os.path.join(results_folder, f"{run_name}_eval_results.pkl"), "wb") as f:
             pickle.dump(eval_results, f)
 
-        def sanitize(d: dict):
-            new_d = {}
-            for k, v in d.items():
-                if isinstance(v, dict):
-                    new_d[k] = sanitize(v)
-                elif isinstance(v, list):
-                    new_d[k] = [sanitize(i) for i in v]
-                elif np.issubdtype(type(v), np.number):
-                    new_d[k] = v.item()
-                elif isinstance(v, np.ndarray):
-                    new_d[k] = v.tolist()
-                else:
-                    new_d[k] = v
-            return new_d
-        with open(os.path.join(results_folder, f"{run_name}_eval_results.json"), "w") as f:
-            json.dump(sanitize(eval_results), f)
-    
-
 if __name__ == '__main__':
     """
     python gcngrasp/run_tg_eval_ver_ar.py --data_dir data/retargeted_taskgrasp
