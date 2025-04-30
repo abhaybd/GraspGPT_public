@@ -342,10 +342,14 @@ class GraspGPTPredictor:
             prob, pred = test(self.model, pc, obj_desc, obj_desc_mask, task_desc, task_desc_mask, task_ins, task_ins_mask)
             probs.append(prob.tolist())
             preds.append(pred.tolist())
-        probs = np.array(probs).flatten().tolist()
-        preds = np.array(preds).flatten().tolist()
+        probs = np.array(probs).flatten()
+        preds = np.array(preds).flatten()
         assert len(probs) == len(filtered_grasps) and len(preds) == len(filtered_grasps)
-        return probs, preds
+        ret_probs = np.zeros(len(grasps), dtype=probs.dtype)
+        ret_preds = np.zeros(len(grasps), dtype=preds.dtype)
+        ret_probs[grasp_on_obj_idxs] = probs
+        ret_preds[grasp_on_obj_idxs] = preds
+        return ret_probs.tolist(), ret_preds.tolist()
 
     def predict_grasp(self, image: Image.Image, depth: np.ndarray, cam_K: np.ndarray, grasps: np.ndarray, task_ins_txt: str, verbosity: int = 0) -> int | None:
         probs, _ = self.predict(image, depth, cam_K, grasps, task_ins_txt, verbosity=verbosity)
