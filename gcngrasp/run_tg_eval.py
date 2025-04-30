@@ -16,6 +16,7 @@ from config import get_cfg_defaults
 from geometry_utils import farthest_grasps, regularize_pc_point_count
 from visualize import save_scene, get_gripper_control_points
 from sklearn.metrics import average_precision_score
+import pickle
 import pdb
 logging.set_verbosity_error()
 
@@ -226,6 +227,8 @@ def run_eval(
         "f1": 2 * tp / (2 * tp + fp + fn),
         "top-1": gt[idx],
         "avg_prec": avg_prec,
+        "pred_grasp_idx": idx,
+        "gt_grasp_idxs": np.argwhere(gt).flatten().tolist()
     }
 
 def main(args, cfg):
@@ -272,6 +275,7 @@ def main(args, cfg):
     mean_avg_prec = []
     top_1_results_level = defaultdict(list)
     all_results = [] # put results of level, task description, correct pred or not. 
+    eval_results = []
     for object_id in tg_dataset.get_objects():
         for task_verb in tg_dataset.get_object_tasks(object_id):
             for view_idx in tg_dataset.get_object_views(object_id):
@@ -292,6 +296,12 @@ def main(args, cfg):
                     if results is not None:
                         top_1_results.append(results["top-1"])
                         mean_avg_prec.append(results["avg_prec"])
+                        eval_results.append({
+                            "object_id": object_id,
+                            "task_verb": task_verb,
+                            "view_idx": view_idx,
+                            "results": results
+                        })
 
     results_folder = "/results" if os.path.isdir("/results") else "gcngrasp/results"
     if args.use_levels:
@@ -322,6 +332,26 @@ def main(args, cfg):
         log_entry_name = f"{cfg.split_mode}_{cfg.split_idx}"
         with open(os.path.join(results_folder, f"{run_name}_top_1_results.csv"), "w") as f:
             f.write(f"{log_entry_name},{np.mean(top_1_results):.2%},{np.mean(mean_avg_prec):.2%}\n")
+
+        with open(os.path.join(results_folder, f"{run_name}_eval_results.pkl"), "wb") as f:
+            pickle.dump(eval_results, f)
+
+        def sanitize(d: dict):
+            new_d = {}
+            for k, v in d.items():
+                if isinstance(v, dict):
+                    new_d[k] = sanitize(v)
+                elif isinstance(v, list):
+                    new_d[k] = [sanitize(i) for i in v]
+                elif np.issubdtype(type(v), np.number):
+                    new_d[k] = v.item()
+                elif isinstance(v, np.ndarray):
+                    new_d[k] = v.tolist()
+                else:
+                    new_d[k] = v
+            return new_d
+        with open(os.path.join(results_folder, f"{run_name}_eval_results.json"), "w") as f:
+            json.dump(sanitize(eval_results), f)
     
 
 if __name__ == '__main__':
