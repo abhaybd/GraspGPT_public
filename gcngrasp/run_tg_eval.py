@@ -283,10 +283,6 @@ def main(args, cfg):
 
     print(f"Total number of training samples: {len(train_obj_grasp_tasks)}")
 
-    # load task levels
-    if args.use_levels:
-        task_levels = json.load(open("reworded_tasks.json"))
-
     # load GraspGPT
     model = load_model(cfg)
 
@@ -307,55 +303,34 @@ def main(args, cfg):
     view_labels_fold = filter_view_labels_for_fold(tg_library, view_labels, split_dir, str(split_idx))
 
     top_1_results = []
-    mean_avg_prec = []
-    top_1_results_level = defaultdict(list)
-    all_results = [] # put results of level, task description, correct pred or not. 
     eval_results = []
     for (object_id, view_idx), task_map in view_labels_fold.items():
         for task_verb, grasp_ids in task_map.items():
             results = run_eval(la_tg_dir, tg_img_dir, object_id, view_idx, task_verb, grasp_ids, model, tokenizer, bert_model, train_obj_grasp_tasks)
             if results is not None:
                 top_1_results.append(results["top-1"])
-                mean_avg_prec.append(results["avg_prec"])
                 eval_results.append({
                     "object_id": object_id,
                     "task_verb": task_verb,
                     "view_idx": view_idx,
-                    "results": results
+                    "results": results,
+                    "success": results["top-1"]
                 })
+            print(f"Running top-1 accuracy: {np.mean(top_1_results):.2%}")
 
     results_folder = "/results" if os.path.isdir("/results") else "gcngrasp/results"
-    if args.use_levels:
-        run_name = args.cfg_file.split("/")[-1].split(".")[0]
-        # save all_results in csv for viewing
-        with open(os.path.join(results_folder, f"{run_name}_levels_qual.csv"), "w") as f:
-            f.write("level,task_desc,correct_pred\n")
-            for level, task_desc, correct_pred in all_results:
-                f.write(f"{level},{task_desc},{correct_pred}\n")
-        print("----------------------------------------------------------------")
-        for level, results in top_1_results_level.items():
-            print(f"Level {level}: Top-1 Accuracy: {np.mean(results):.2%}")
-        print("----------------------------------------------------------------")
-        #save to csv
+    print("----------------------------------------------------------------")
+    print(f"Top-1 Accuracy: {np.mean(top_1_results):.2%}")
+    print("----------------------------------------------------------------")
 
-        log_entry_name = f"{cfg.split_mode}_{cfg.split_idx}"
-        with open(os.path.join(results_folder, f"{run_name}_top_1_results_levels.csv"), "w") as f:
-            for level, results in top_1_results_level.items():
-                f.write(f"{log_entry_name},{level},{np.mean(results):.2%}\n")
-    else:
-        print("----------------------------------------------------------------")
-        print(f"Top-1 Accuracy: {np.mean(top_1_results):.2%}")
-        print(f"Mean Average Precision: {np.mean(mean_avg_prec):.2%}")
-        print("----------------------------------------------------------------")
+    #save to csv
+    run_name = args.cfg_file.split("/")[-1].split(".")[0]
+    log_entry_name = f"{cfg.split_mode}_{cfg.split_idx}"
+    with open(os.path.join(results_folder, f"{run_name}_top_1_results.csv"), "w") as f:
+        f.write(f"{log_entry_name},{np.mean(top_1_results):.2%}\n")
 
-        #save to csv
-        run_name = args.cfg_file.split("/")[-1].split(".")[0]
-        log_entry_name = f"{cfg.split_mode}_{cfg.split_idx}"
-        with open(os.path.join(results_folder, f"{run_name}_top_1_results.csv"), "w") as f:
-            f.write(f"{log_entry_name},{np.mean(top_1_results):.2%},{np.mean(mean_avg_prec):.2%}\n")
-
-        with open(os.path.join(results_folder, f"{run_name}_eval_results.pkl"), "wb") as f:
-            pickle.dump(eval_results, f)
+    with open(os.path.join(results_folder, f"{run_name}_eval_results.pkl"), "wb") as f:
+        pickle.dump(eval_results, f)
 
 if __name__ == '__main__':
     """
@@ -367,7 +342,6 @@ if __name__ == '__main__':
     parser.add_argument("--la-tg-dir", default="/weka/prior/abhayd/semantic-grasping-datasets/LA-TaskGrasp")
     parser.add_argument("--tg-img-dir", default="/weka/prior/abhayd/semantic-grasping-datasets/taskgrasp_image")
     parser.add_argument('--obj_name', help='', default='spatula')
-    parser.add_argument('--use_levels', help='', action='store_true')
     parser.add_argument(
         '--cfg_file',
         help='yaml file in YACS config format to override default configs',
