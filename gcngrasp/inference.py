@@ -23,8 +23,6 @@ logging.set_verbosity_error()
 
 from pydantic import BaseModel
 
-from mask_detection import MaskDetector
-
 DEVICE = "cuda"
 CODE_DIR = os.path.join(os.path.dirname(__file__), '../')
 sys.path.append(CODE_DIR)
@@ -202,6 +200,7 @@ class GraspGPTPredictor:
         self.bert_model = self.bert_model.to(DEVICE)
         self.bert_model.eval()
 
+        from mask_detection import MaskDetector
         self.mask_detector = MaskDetector()
         self.openai_client = OpenAI()
 
