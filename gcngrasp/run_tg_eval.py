@@ -118,6 +118,8 @@ def get_descs(la_tg_dir: str, object_class: str, task_verb: str, tokenizer, bert
         print(f"no description found for {object_class}, falling back to gpt")
         obj_desc_txt, task_desc_txt = gen_gpt_desc(openai_client, object_class, task_verb)
         obj_desc, _, obj_desc_mask = encode_text(obj_desc_txt, tokenizer, bert, DEVICE, type='od')
+        obj_desc = obj_desc[0]
+        obj_desc_mask = obj_desc_mask[0]
     else:
         obj_desc_txt = open(os.path.join(obj_desc_path, 'all.txt')).readlines()[0]
         obj_desc = np.load(os.path.join(obj_desc_path, 'word_embed.npy'))[0]
@@ -130,6 +132,8 @@ def get_descs(la_tg_dir: str, object_class: str, task_verb: str, tokenizer, bert
         if task_desc_txt is None:
             _, task_desc_txt = gen_gpt_desc(openai_client, object_class, task_verb)
         task_desc, _, task_desc_mask = encode_text(task_desc_txt, tokenizer, bert, DEVICE, type='td')
+        task_desc = task_desc[0]
+        task_desc_mask = task_desc_mask[0]
     else:
         task_desc_txt = open(os.path.join(task_desc_path, 'all.txt')).readlines()[0]
         task_desc = np.load(os.path.join(task_desc_path, 'word_embed.npy'))[0]
