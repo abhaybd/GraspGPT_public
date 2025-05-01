@@ -20,6 +20,7 @@ import pickle
 import pdb
 logging.set_verbosity_error()
 
+from utils.library import TaskGraspScanLibrary
 
 DEVICE = "cuda"
 CODE_DIR = os.path.join(os.path.dirname(__file__), '../')
@@ -104,12 +105,12 @@ def load_pc_and_grasps(data_dir, obj_name, view_idx: int):
     return pc, grasps
 
 def run_eval(
-    dataset: TaskGraspDataset,
     la_tg_dir: str,
     tg_img_dir: str,
     obj_id: str,
     view_idx: str,
     task_verb: str,
+    grasp_ids: set[int],
     model: GraspGPT_plain,
     bert_tokenizer: BertTokenizer,
     bert_model: BertModel,
@@ -205,31 +206,56 @@ def run_eval(
     preds = np.array(preds).flatten().astype(bool)
     probs = np.array(probs).flatten()
 
-    label_mask = dataset.get_grasp_label_mask(obj_id, task_verb)
-    gt = dataset.get_grasp_labels(obj_id, task_verb)
-
-    masked_preds = preds[label_mask]
-    masked_probs = probs[label_mask]
-
-    tp = np.sum(masked_preds & gt)
-    fp = np.sum(masked_preds & ~gt)
-    tn = np.sum(~masked_preds & ~gt)
-    fn = np.sum(~masked_preds & gt)
-
-    avg_prec = average_precision_score(gt, masked_probs)
-
-    idx=np.argmax(probs[label_mask])
+    idx = np.argmax(probs)
 
     return {
-        "accuracy": (tp + tn) / (tp + tn + fp + fn),
-        "precision": tp / (tp + fp),
-        "recall": tp / (tp + fn),
-        "f1": 2 * tp / (2 * tp + fp + fn),
-        "top-1": gt[idx],
-        "avg_prec": avg_prec,
+        "top-1": idx in grasp_ids,
         "pred_grasp_idx": idx,
-        "gt_grasp_idxs": np.argwhere(gt).flatten().tolist()
+        "gt_grasp_idxs": list(grasp_ids)
     }
+
+def parse_view_labels(tg_library: TaskGraspScanLibrary, path: str):
+    view_labels: dict[tuple[str, int], dict[str, set[int]]] = {}  # (object_id, view_id) -> {task_verb -> set of positive grasp_ids}
+    with open(path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            part1, label = line.split(":")
+            obj_id, grasp_id, task_verb = part1.split("-")
+            if label == "1":
+                view_ids = tg_library.get_views(obj_id)
+                for view_id in view_ids:
+                    if (obj_id, view_id, "_registered_grasps.npy") in tg_library:
+                        k = (obj_id, view_id)
+                        if k not in view_labels:
+                            view_labels[k] = {}
+                        if task_verb not in view_labels[k]:
+                            view_labels[k][task_verb] = set()
+                        view_labels[k][task_verb].add(int(grasp_id))
+    return view_labels
+
+def filter_view_labels_for_fold(tg_library: TaskGraspScanLibrary, view_labels: dict[tuple[str, int], dict[str, set[int]]], split_dir: str, fold: str):
+    trained_view_labels = parse_view_labels(tg_library, os.path.join(split_dir, fold, "train_split.txt"))
+    new_view_labels: dict[tuple[str, int], dict[str, set[int]]] = {}
+    for key, task_map in view_labels.items():
+        if key not in trained_view_labels:
+            new_view_labels[key] = task_map
+            continue
+        new_view_labels[key] = {}
+        for task_verb, grasp_ids in task_map.items():
+            if task_verb not in trained_view_labels[key]:
+                new_view_labels[key][task_verb] = grasp_ids
+            else:
+                new_view_labels[key][task_verb] = grasp_ids - trained_view_labels[key][task_verb]
+            if len(new_view_labels[key][task_verb]) == 0:
+                del new_view_labels[key][task_verb]
+        if len(new_view_labels[key]) == 0:
+            del new_view_labels[key]
+    for k, d in view_labels.items():
+        for t, s in d.items():
+            assert len(s) > 0, f"No grasp ids for {k} and {t}"
+    return new_view_labels
 
 def main(args, cfg):
     la_tg_dir = args.la_tg_dir
@@ -270,38 +296,33 @@ def main(args, cfg):
     bert_model = bert_model.to(DEVICE)
     bert_model.eval()
 
-    tg_dataset = TaskGraspDataset("/weka/prior/abhayd/semantic-grasping-datasets/taskgrasp_image")
+    tg_dir = "/weka/prior/abhayd/semantic-grasping-datasets/taskgrasp_image"
+    tg_library = TaskGraspScanLibrary(tg_dir)
+    split_dir = os.path.join(tg_dir, "splits_final", split_mode, str(split_idx))
+    if not os.path.isdir(split_dir):
+        raise FileNotFoundError(f"Split directory {split_dir} not found")
+
+    # (object_id, view_id) -> {task_verb -> set of positive grasp_ids}
+    view_labels = parse_view_labels(tg_library, os.path.join(tg_dir, "task2_results.txt"))
+    view_labels_fold = filter_view_labels_for_fold(tg_library, view_labels, split_dir, str(split_idx))
+
     top_1_results = []
     mean_avg_prec = []
     top_1_results_level = defaultdict(list)
     all_results = [] # put results of level, task description, correct pred or not. 
     eval_results = []
-    for object_id in tg_dataset.get_objects():
-        for task_verb in tg_dataset.get_object_tasks(object_id):
-            for view_idx in tg_dataset.get_object_views(object_id):
-                if args.use_levels:
-                    object_name = object_id.split("_", 1)[1].replace("_", " ")
-                    level_dict_key = f"{object_name}-{task_verb}"
-                    if level_dict_key not in task_levels:
-                        print(f"no task levels for {level_dict_key}")
-                        continue
-                    for level in task_levels[level_dict_key]:
-                        task_text = task_levels[level_dict_key][level]
-                        results = run_eval(tg_dataset, la_tg_dir, tg_img_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model, train_obj_grasp_tasks, task_text)
-                        if results is not None:
-                            top_1_results_level[level].append(results["top-1"])
-                            all_results.append((level, task_text, results["top-1"]))
-                else:
-                    results = run_eval(tg_dataset, la_tg_dir, tg_img_dir, object_id, view_idx, task_verb, model, tokenizer, bert_model, train_obj_grasp_tasks)
-                    if results is not None:
-                        top_1_results.append(results["top-1"])
-                        mean_avg_prec.append(results["avg_prec"])
-                        eval_results.append({
-                            "object_id": object_id,
-                            "task_verb": task_verb,
-                            "view_idx": view_idx,
-                            "results": results
-                        })
+    for (object_id, view_idx), task_map in view_labels_fold.items():
+        for task_verb, grasp_ids in task_map.items():
+            results = run_eval(la_tg_dir, tg_img_dir, object_id, view_idx, task_verb, grasp_ids, model, tokenizer, bert_model, train_obj_grasp_tasks)
+            if results is not None:
+                top_1_results.append(results["top-1"])
+                mean_avg_prec.append(results["avg_prec"])
+                eval_results.append({
+                    "object_id": object_id,
+                    "task_verb": task_verb,
+                    "view_idx": view_idx,
+                    "results": results
+                })
 
     results_folder = "/results" if os.path.isdir("/results") else "gcngrasp/results"
     if args.use_levels:
