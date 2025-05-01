@@ -73,10 +73,10 @@ def test(model, pc, obj_desc, obj_desc_mask, task_desc, task_desc_mask, task_ins
 
     pc = pc.type(torch.cuda.FloatTensor)
 
-    obj_desc = torch.from_numpy(obj_desc).unsqueeze(0).to(DEVICE)
-    obj_desc_mask = torch.from_numpy(obj_desc_mask).unsqueeze(0).to(DEVICE)
-    task_desc = torch.from_numpy(task_desc).unsqueeze(0).to(DEVICE)
-    task_desc_mask = torch.from_numpy(task_desc_mask).unsqueeze(0).to(DEVICE)
+    obj_desc = torch.as_tensor(obj_desc).unsqueeze(0).to(DEVICE)
+    obj_desc_mask = torch.as_tensor(obj_desc_mask).unsqueeze(0).to(DEVICE)
+    task_desc = torch.as_tensor(task_desc).unsqueeze(0).to(DEVICE)
+    task_desc_mask = torch.as_tensor(task_desc_mask).unsqueeze(0).to(DEVICE)
 
     with torch.no_grad():
         logits = model(pc, obj_desc, obj_desc_mask, task_desc, task_desc_mask, task_ins, task_ins_mask)
