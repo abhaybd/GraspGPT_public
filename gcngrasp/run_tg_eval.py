@@ -19,14 +19,18 @@ from sklearn.metrics import average_precision_score
 import pickle
 import pdb
 logging.set_verbosity_error()
+from openai import OpenAI
 
 from utils.library import TaskGraspScanLibrary
+from inference import gen_gpt_desc
 
 DEVICE = "cuda"
 CODE_DIR = os.path.join(os.path.dirname(__file__), '../')
 sys.path.append(CODE_DIR)
 
 from utils.data_utils import TaskGraspDataset
+
+openai_client = OpenAI()
 
 
 def encode_text(text, tokenizer, model, device, type=None):
@@ -104,6 +108,34 @@ def load_pc_and_grasps(data_dir, obj_name, view_idx: int):
 
     return pc, grasps
 
+def get_descs(la_tg_dir: str, object_class: str, task_verb: str, tokenizer, bert):
+    obj_desc_dir = os.path.join(la_tg_dir, "obj_gpt_v2", object_class)
+    task_desc_dir = os.path.join(la_tg_dir, "task_gpt_v2", task_verb)
+
+    obj_desc_txt, task_desc_txt = None, None
+    obj_desc_path =  os.path.join(obj_desc_dir, 'descriptions', str(np.random.randint(0, 10)))
+    if not os.path.exists(obj_desc_path):
+        print(f"no description found for {object_class}, falling back to gpt")
+        obj_desc_txt, task_desc_txt = gen_gpt_desc(openai_client, object_class, task_verb)
+        obj_desc, _, obj_desc_mask = encode_text(obj_desc_txt, tokenizer, bert, DEVICE, type='od')
+    else:
+        obj_desc_txt = open(os.path.join(obj_desc_path, 'all.txt')).readlines()[0]
+        obj_desc = np.load(os.path.join(obj_desc_path, 'word_embed.npy'))[0]
+        obj_desc_mask = np.load(os.path.join(obj_desc_path, 'attn_mask.npy'))[0]
+    
+    # task description embeddings
+    task_desc_path = os.path.join(task_desc_dir, 'descriptions', str(np.random.randint(0, 10)))
+    if not os.path.exists(task_desc_path):
+        print(f"no description found for {task_verb}, falling back to gpt")
+        if task_desc_txt is None:
+            _, task_desc_txt = gen_gpt_desc(openai_client, object_class, task_verb)
+        task_desc, _, task_desc_mask = encode_text(task_desc_txt, tokenizer, bert, DEVICE, type='td')
+    else:
+        task_desc_txt = open(os.path.join(task_desc_path, 'all.txt')).readlines()[0]
+        task_desc = np.load(os.path.join(task_desc_path, 'word_embed.npy'))[0]
+        task_desc_mask = np.load(os.path.join(task_desc_path, 'attn_mask.npy'))[0]
+    return obj_desc_txt, obj_desc, obj_desc_mask, task_desc_txt, task_desc, task_desc_mask
+
 def run_eval(
     la_tg_dir: str,
     tg_img_dir: str,
@@ -173,26 +205,7 @@ def run_eval(
         # load language embeddings
         pc = torch.tensor([pc])
 
-        # object class description embeddings
-        obj_desc_path =  os.path.join(obj_desc_dir, 'descriptions', str(np.random.randint(0, 10)))
-        if not os.path.exists(obj_desc_path):
-            print(f"no description found for {object_name}")
-            return None
-            # raise ValueError(f"No such object description path: {obj_desc_path}")
-        obj_desc_txt = open(os.path.join(obj_desc_path, 'all.txt')).readlines()[0]
-        obj_desc = np.load(os.path.join(obj_desc_path, 'word_embed.npy'))[0]
-        obj_desc_mask = np.load(os.path.join(obj_desc_path, 'attn_mask.npy'))[0]
-        
-        # task description embeddings 
-        task_desc_path = os.path.join(task_desc_dir, 'descriptions', str(np.random.randint(0, 10)))
-        if not os.path.exists(task_desc_path):
-            print(f"no description found for {task_verb}")
-            return None
-            # raise ValueError(f"No such task description dir: {task_desc_path}")
-        task_desc_txt = open(os.path.join(task_desc_path, 'all.txt')).readlines()[0]
-        task_desc = np.load(os.path.join(task_desc_path, 'word_embed.npy'))[0]
-        task_desc_mask = np.load(os.path.join(task_desc_path, 'attn_mask.npy'))[0]
-
+        obj_desc_txt, obj_desc, obj_desc_mask, task_desc_txt, task_desc, task_desc_mask = get_descs(la_tg_dir, object_class, task_verb, bert_tokenizer, bert_model)
         prob, pred = test(model, pc, obj_desc, obj_desc_mask, task_desc, task_desc_mask, task_ins, task_ins_mask)
 
         preds.append(pred.tolist())
@@ -200,6 +213,7 @@ def run_eval(
 
     
     if len(preds) == 0:
+        print(f"WARN: no grasps to evaluate for {obj_id} {view_idx} {task_verb}")
         return None
     
     print(f"Skipped {skip_count} grasps in {obj_id} {view_idx} {task_verb} since in train")
