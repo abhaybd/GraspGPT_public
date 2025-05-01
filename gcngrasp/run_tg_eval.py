@@ -294,7 +294,7 @@ def main(args, cfg):
 
     tg_dir = "/weka/prior/abhayd/semantic-grasping-datasets/taskgrasp_image"
     tg_library = TaskGraspScanLibrary(tg_dir)
-    split_dir = os.path.join(tg_dir, "splits_final", split_mode, str(split_idx))
+    split_dir = os.path.join(tg_dir, "splits_final", split_mode)
     if not os.path.isdir(split_dir):
         raise FileNotFoundError(f"Split directory {split_dir} not found")
 
